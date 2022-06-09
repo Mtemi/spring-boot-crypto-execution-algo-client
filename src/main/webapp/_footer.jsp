@@ -30,7 +30,7 @@ PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 
 <tr >
 	<td align="left" width="25%">
-		<a href="https://github.com/ismailfer/algo-client-springboot" target="_blank">
+		<a href="https://github.com/ismailfer/spring-boot-crypto-execution-algo-client" target="_blank">
 		GitHub Project
 		</a>
 	</td>
