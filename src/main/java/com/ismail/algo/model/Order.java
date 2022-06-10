@@ -30,14 +30,7 @@ public class Order
     
     public String rejectReason;
     
-    public double quantityFilled;
-    
-    public double averagePrice;
 
-    public int tradesCount;
-
-    public int childOrdersCount;
-    
     public long createdTime;
 
     public long updatedTime;
@@ -58,11 +51,26 @@ public class Order
 
     public double stopPrice;
     
+    // execution
+    
+    public double quantityFilled;
+    
+    public double averagePrice;
+
+    public int tradesCount;
+
+    public int childOrdersCount;
+    
+    public String lastTradeVenue;
+    
+    // algo strat detail
+    
     public String algoStrategyID;
     
     public List<AlgoParamValue> algoParams;
-    
+
     public TopOfBook topOfBook;
+    
     
     @JsonIgnore
     public AlgoParamValue getParamByName(String pParamName)

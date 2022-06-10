@@ -45,8 +45,6 @@ catch (Throwable t)
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td colspan=1 rowspan=2><b>InstrumentID</b></td>
-	<td colspan=1 rowspan=2><b>Symbol</b></td>
-	<td colspan=1 rowspan=2><b>Exchange</b></td>
 	<td colspan=1 rowspan=2><b>Description</b></td>
 	<td colspan=1 rowspan=2><b>Type</b></td>
 	<td colspan=1 rowspan=2><b>Base<br>Asset</b></td>
@@ -78,8 +76,6 @@ catch (Throwable t)
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
 	<td valign="top"><%=inst.getInstrumentID() %></td>
-	<td valign="top"><%=inst.getSymbol() %></td>
-	<td valign="top"><%=inst.getExchange() %></td>
 	<td valign="top"><%=inst.getDesc() %></td>
 	<td valign="top"><%=inst.getInstType() %></td>
 	<td valign="top"><%=inst.getBaseAsset() %></td>

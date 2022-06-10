@@ -21,35 +21,45 @@ String strategyID = AlgoUtil.getParameter(request, "strategyID", "");
     <td width=20%></td>
     
     <td width=5></td>   
-    <td width=150 align="center" bgcolor=<%=spath.contains("/index.jsp") ? theme.tab0s : theme.tab0 %>> 
+    <td width=150 align="center" bgcolor="<%=spath.contains("/index.jsp") ? theme.tab0s : theme.tab0 %>"> 
         <a href="/" style="color: <%=theme.tab0Text %>;">Home</a>       
     </td>
 
     <td width=5></td>   
-    <td width=150 align="center" bgcolor=<%=spath.contains("/algo") ? theme.tab0s : theme.tab0 %>> 
+    <td width=150 align="center" bgcolor="<%=spath.contains("/algo") ? theme.tab0s : theme.tab0 %>"
+    	title="View Available Algorithms, their objectives, parameters and default values"> 
         <a href="/algos.jsp" style="color: <%=theme.tab0Text %>;">Algos</a>       
     </td>
 
     <td width=2></td>       
-    <td width=150 align="center" bgcolor=<%=spath.equals("/new_order.jsp") ? theme.tab0s : theme.tab0 %>>
+    <td width=150 align="center" bgcolor="<%=spath.equals("/new_order.jsp") ? theme.tab0s : theme.tab0 %>"
+    	title="Place a new Algo order; and watch it trade">
         <a href="/new_order.jsp<%=AlgoUtil.isDefined(strategyID) ? "?strategyID=" + strategyID : "" %>" 
         	style="color: <%=theme.tab0Text %>;">New Order Request</a>       
     </td>
 
 
     <td width=2></td>       
-    <td width=150 align="center" bgcolor=<%=(spath.equals("/orders.jsp") || spath.startsWith("/order_")) ? theme.tab0s : theme.tab0 %>>
+    <td width=150 align="center" bgcolor="<%=(spath.equals("/orders.jsp") || spath.startsWith("/order_")) ? theme.tab0s : theme.tab0 %>"
+    	title="View orders and trades">
         <a href="/orders.jsp" style="color: <%=theme.tab0Text %>;">Orders</a>       
     </td>
 
     <td width=5></td>   
-    <td width=150 align="center" bgcolor=<%=spath.contains("/topOfBooks.jsp") ? theme.tab0s : theme.tab0 %> >
-        <a href="topOfBooks.jsp" style="color: <%=theme.tab0Text %>;">Top Of Book Live</a>     
+    <td width=150 align="center" bgcolor="<%=spath.contains("/topOfBooks.jsp") ? theme.tab0s : theme.tab0 %>"
+    	title="View live top of book">
+        <a href="topOfBooks.jsp" style="color: <%=theme.tab0Text %>;">Top Of Book</a>     
     </td>
     
-
     <td width=5></td>   
-    <td width=150 align="center" bgcolor=<%=spath.contains("/instruments.jsp") ? theme.tab0s : theme.tab0 %> >
+    <td width=150 align="center" bgcolor="<%=spath.contains("/topOfBooksMulti.jsp") ? theme.tab0s : theme.tab0 %>"
+    	title="View live top of book; from multiple sources">
+        <a href="topOfBooksMulti.jsp" style="color: <%=theme.tab0Text %>;">Top Of Book Multi</a>     
+    </td>
+    
+    <td width=5></td>   
+    <td width=150 align="center" bgcolor="<%=spath.contains("/instruments.jsp") ? theme.tab0s : theme.tab0 %>"
+    	title="View instrument list">
         <a href="/instruments.jsp" style="color: <%=theme.tab0Text %>;">Instruments</a>     
     </td>
     

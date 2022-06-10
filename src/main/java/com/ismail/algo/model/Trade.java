@@ -13,22 +13,24 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 public class Trade
 {
-    private long tradeID;
+    public long tradeID;
 
-    private long parentOrderID;
+    public long parentOrderID;
 
-    private long childOrderID;
+    public long childOrderID;
 
-    private String instrumentID;
+    public String instrumentID;
 
-    private String side;
+    public String side;
 
-    private double quantity;
+    public double quantity;
 
-    private double price;
+    public double price;
 
-    private long tradeTime;
+    public String venue;
+    
+    public long tradeTime;
 
-    private String exchTradeID;
+    public String exchTradeID;
 
 }

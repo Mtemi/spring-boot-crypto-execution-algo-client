@@ -81,7 +81,7 @@ if (order != null)
 <table width="1000" cellpadding=5 align="center">
 
 <tr>
-	<td colspan="8" align="center" style="font-size: 20px;">
+	<td colspan="9" align="center" style="font-size: 20px;">
 		<b>Trades</b>
 	</td>
 </tr>
@@ -95,6 +95,7 @@ if (order != null)
 	<td align="right"><b>Quantity</b></td>
 	<td align="right"><b>Price</b></td>
 	<td align="right"><b>%<br>of Order</b></td>
+	<td align="right"><b>Trading Venue</b></td>
 </tr>
 
 <% 
@@ -121,6 +122,8 @@ for (int i=0; i<trades.size(); i++)
 	<td align="right"><%=AlgoUtil.numericFormat(trade.getPrice(), inst.getPriceDecimals()) %></td>
 
 	<td align="right"><%=AlgoUtil.numericFormat(pctOfOrder, 2) %></td>
+
+	<td align="right"><%=trade.getVenue() == null ? "" : trade.getVenue() %></td>
 
 </tr>	
 

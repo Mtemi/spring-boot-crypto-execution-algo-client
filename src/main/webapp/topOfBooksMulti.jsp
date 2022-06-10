@@ -1,3 +1,4 @@
+<%@page import="com.ismail.algo.model.TopOfBook"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="com.ismail.algo.model.Instrument"%>
 <%@page import="com.ismail.algo.config.AlgoClientConfig"%>
@@ -20,7 +21,7 @@ AlgoClientConfig algoConfig = appServices.config;
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
-pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books";
+pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books (Multi Sources)";
 
 List<Instrument> instruments = null;
 
@@ -74,26 +75,61 @@ for (int i=0; i<instruments.size(); i++)
     
     // replace the dots; as it causes issues with JS
     String elemID = inst.getInstrumentID().replaceAll("\\.", "_");
+    
+    String mdSource = inst.topOfBook.mdSource;
+    
+
 %>
 
-<tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
-	<td id="symbol_<%=elemID %>" valign="top"><%=inst.getInstrumentID() %></td>
+<tr bgcolor="<%=theme.rawHighlight %>">
+	<td id="symbol_<%=elemID %>_<%=mdSource %>" valign="top"><%=inst.getInstrumentID() %></td>
 	<td valign="top"><%=inst.getDesc() %></td>
 	<td valign="top"><%=inst.getInstType() %></td>
 
-	<td id="mdSource_<%=elemID %>" valign="top"></td>
+	<td id="mdSource_<%=elemID %>_<%=mdSource %>" valign="top"><%=mdSource %></td>
 
-	<td id="bidQty_<%=elemID %>" valign="top" align="right"></td>
-	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=theme.bid %>;"></td>
-	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=theme.ask %>;"></td>
-	<td id="askQty_<%=elemID %>" valign="top" align="right"></td>
+	<td id="bidQty_<%=elemID %>_<%=mdSource %>" valign="top" align="right"></td>
+	<td id="bidPx_<%=elemID %>_<%=mdSource %>" valign="top" align="right" style="color: <%=theme.bid %>;"></td>
+	<td id="askPx_<%=elemID %>_<%=mdSource %>" valign="top" align="right" style="color: <%=theme.ask %>;"></td>
+	<td id="askQty_<%=elemID %>_<%=mdSource %>" valign="top" align="right"></td>
 
-	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
-	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
+	<td id="spread_<%=elemID %>_<%=mdSource %>" valign="top" align="right"></td>
+	<td id="spreadBps_<%=elemID %>_<%=mdSource %>" valign="top" align="right"></td>
 
-	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
+	<td id="utime_<%=elemID %>_<%=mdSource %>" valign="top" align="right"></td>
 
 </tr>	
+
+
+<%
+
+for (TopOfBook tob : inst.topOfBooks)
+{
+    if (tob.mdSource.equals(mdSource))
+        continue;
+        
+%>
+
+<tr>
+	<td id="symbol_<%=elemID %>_<%=tob.mdSource %>" valign="top"></td>
+	<td valign="top"></td>
+	<td valign="top"></td>
+
+	<td id="mdSource_<%=elemID %>_<%=tob.mdSource %>" valign="top"><%=tob.mdSource %></td>
+
+	<td id="bidQty_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right"></td>
+	<td id="bidPx_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right" style="color: <%=theme.bid %>;"></td>
+	<td id="askPx_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right" style="color: <%=theme.ask %>;"></td>
+	<td id="askQty_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right"></td>
+
+	<td id="spread_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right"></td>
+	<td id="spreadBps_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right"></td>
+
+	<td id="utime_<%=elemID %>_<%=tob.mdSource %>" valign="top" align="right"></td>
+
+</tr>	
+
+<% } %>
 
 <% } %>
 
@@ -120,8 +156,8 @@ for (int i=0; i<instruments.size(); i++)
 <%
 String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
 
-//if (StringUtil.isDefined(instID))
-//	wsURL += "?instID=" + instID;
+wsURL += "?multiSources=true";
+
 %>
 
 <script type="text/javascript" charset="utf-8">
@@ -184,17 +220,17 @@ socket.onmessage = function(event)
     // replace the dot; as it causes issues with JS
     var elemID = message.instrumentID.replace('.', '_');
     
-    var idSymbol = document.querySelector('#symbol_'+elemID);
-    var idMDSource = document.querySelector('#mdSource_'+elemID);
+    var idSymbol = document.querySelector('#symbol_'+elemID+'_'+message.mdSource);
+    var idMDSource = document.querySelector('#mdSource_'+elemID+'_'+message.mdSource);
     
-    var idBidQty = document.querySelector('#bidQty_'+elemID);
-    var idBidPx = document.querySelector('#bidPx_'+elemID);
-    var idAskQty = document.querySelector('#askQty_'+elemID);
-    var idAskPx = document.querySelector('#askPx_'+elemID);
-    var idUtime = document.querySelector('#utime_'+elemID);
+    var idBidQty = document.querySelector('#bidQty_'+elemID+'_'+message.mdSource);
+    var idBidPx = document.querySelector('#bidPx_'+elemID+'_'+message.mdSource);
+    var idAskQty = document.querySelector('#askQty_'+elemID+'_'+message.mdSource);
+    var idAskPx = document.querySelector('#askPx_'+elemID+'_'+message.mdSource);
+    var idUtime = document.querySelector('#utime_'+elemID+'_'+message.mdSource);
 
-    var idSpread = document.querySelector('#spread_'+elemID);
-    var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
+    var idSpread = document.querySelector('#spread_'+elemID+'_'+message.mdSource);
+    var idSpreadBps = document.querySelector('#spreadBps_'+elemID+'_'+message.mdSource);
     
     if (idSymbol == null)
     {
@@ -204,8 +240,8 @@ socket.onmessage = function(event)
     
 	//idSymbol.textContent = msgSymbol;
 		
-	idSymbol.textContent = message.instrumentID;
-	idMDSource.textContent = message.mdSource;
+	//idSymbol.textContent = message.instrumentID;
+	//idMDSource.textContent = message.mdSource;
 	
 	idBidQty.textContent = message.bidQtyStr;
 	idBidPx.textContent = message.bidStr;

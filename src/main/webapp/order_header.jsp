@@ -109,6 +109,8 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 <tr bgcolor="<%=theme.headerBg %>">
 	<td rowspan="2"><b>OrderID</b></td>
 	<td rowspan="2"><b>Received<br>Time</b></td>
+	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
+	
 	<td rowspan="2"><b>ClientID</b></td>
 	<td colspan="3" rowspan="1" align="center"><b>Instrument</b></td>
 	
@@ -119,7 +121,7 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 
 	<td colspan="5" rowspan="1" align="center"><b>Order Request</b></td>
 	
-	<td colspan="5" rowspan="1" align="center"><b>Execution</b></td>
+	<td colspan="6" rowspan="1" align="center"><b>Execution</b></td>
 
 </tr>
 
@@ -149,6 +151,7 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 	<td align="right"><b>Done<br>%</b></td>
 	<td align="center"><b>Trades<br>Count</b></td>
 	<td align="center"><b>Child<br>Orders</b></td>
+	<td align="center"><b>Trading<br>Venue</b></td>
 
 </tr>
 
@@ -158,6 +161,11 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 
 	<td ><%=order.getOrderID() %></td>
 	<td ><%=formatter.format(order.getCreatedTime()) %></td>
+	
+	<td align="right" title="<%=order.getUpdatedTime() - order.getCreatedTime() %> ms">
+		<%=AlgoUtil.getOrderAge(order.getUpdatedTime() - order.getCreatedTime()) %>
+	</td>
+		
 	<td ><%=order.getClientID() %></td>
 	
 	<td ><%=order.getInstrumentID() %></td>
@@ -202,7 +210,7 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 
 	<!--  execution detail -->
 	<% if ("Rejected".equals(order.getStatus())) { %>
-		<td align="left" colspan="5" style="color: <%=theme.negative %>;">
+		<td align="left" colspan="6" style="color: <%=theme.negative %>;">
 			<%=order.getRejectReason() == null ? "" : order.getRejectReason() %>
 		</td>	
 	<% } else { %>
@@ -211,6 +219,11 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 		<td align="right"><%=doneQtyPct == 0.0 ? "" : AlgoUtil.numericFormat(doneQtyPct, 2) %></td>
 		<td align="center"><%=order.getTradesCount() == 0 ? "" : order.getTradesCount() %></td>
 		<td align="center"><%=order.getChildOrdersCount() == 0 ? "" : order.getChildOrdersCount() %></td>
+		
+		<td align="center">
+			<%=order.getLastTradeVenue() == null ? "" : order.getLastTradeVenue() %>
+		</td>
+				
 	<% } %>
 
 </tr>	

@@ -10,33 +10,37 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TopOfBook
 {    
-    private String instrumentID = null;
+    public String instrumentID = null;
         
-    private String symbol = null;
+    public String symbol = null;
 
-    private double bidQty = 0.0;
+    public double bidQty = 0.0;
 
-    private double bid = 0.0;
+    public double bid = 0.0;
 
-    private double ask = 0.0;
+    public double ask = 0.0;
 
-    private double askQty = 0.0;
+    public double askQty = 0.0;
 
-    private double last = 0.0;
+    public double last = 0.0;
 
-    private double spread;
+    public double spread;
     
-    private double spreadBps;
+    public double spreadBps;
     
-    private long updateTime = 0L;
+    public long updateTime = 0L;
 
-    private String updateTimeDesc;
+    public String updateTimeDesc;
     
-    private long updateNumber = 0;
+    public String cxtTime;
 
-    private int depthLevels = 0;
+    public long updateNumber = 0;
+
+    public int depthLevels = 0;
     
-    private boolean live = false;
+    public String mdSource;
+    
+    public boolean live = false;
     
 
 }

@@ -69,6 +69,7 @@ catch (Throwable t)
 <tr bgcolor="<%=theme.headerBg %>">
 	<td rowspan="2"><b>OrderID</b></td>
 	<td rowspan="2"><b>Received<br>Time</b></td>
+	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
 	<td rowspan="2"><b>ClientID</b></td>
 	<td colspan="3" rowspan="1" align="center"><b>Instrument</b></td>
 	<td rowspan="2" align="center"><b>Primary<br>State</b></td>
@@ -81,7 +82,7 @@ catch (Throwable t)
 
 	<td colspan="5" rowspan="1" align="center"><b>Order Request</b></td>
 	
-	<td colspan="5" rowspan="1" align="center"><b>Execution</b></td>
+	<td colspan="6" rowspan="1" align="center"><b>Execution</b></td>
 
 </tr>
 
@@ -111,6 +112,7 @@ catch (Throwable t)
 	<td align="right"><b>Done<br>%</b></td>
 	<td align="center"><b>Trades<br>Count</b></td>
 	<td align="center"><b>Child<br>Orders</b></td>
+	<td align="center"><b>Trading<br>Venue</b></td>
 
 </tr>
 
@@ -161,19 +163,33 @@ for (int i=0; i<orders.size(); i++)
 		<%=formatter.format(order.getCreatedTime()) %>
 		</a>
 	</td>
-		
+
+	<td align="right" title="<%=order.getUpdatedTime() - order.getCreatedTime() %> ms">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<%=AlgoUtil.getOrderAge(order.getUpdatedTime() - order.getCreatedTime()) %>
+		</a>
+	</td>
+			
 	<td >
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
 		<%=order.getClientID() %>
 		</a>
 	</td>
 	
-	<td ><%=order.getInstrumentID() %></td>
-	<td align="right" style="color: <%=theme.bid %>;">
-		<%=AlgoUtil.numericFormat(tob.getBid(), inst.getPriceDecimals()) %>
+	<td >
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<%=order.getInstrumentID() %>
+		</a>
 	</td>
-	<td align="right" style="color: <%=theme.ask %>;">
+	<td align="right">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bid %>;" target="_blank">
+		<%=AlgoUtil.numericFormat(tob.getBid(), inst.getPriceDecimals()) %>
+		</a>
+	</td>
+	<td align="right">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.ask %>;" target="_blank">		
 		<%=AlgoUtil.numericFormat(tob.getAsk(), inst.getPriceDecimals()) %>
+		</a>
 	</td>
 	
 	
@@ -240,7 +256,7 @@ for (int i=0; i<orders.size(); i++)
 
 	<!--  execution detail -->
 	<% if ("Rejected".equals(order.getStatus())) { %>
-		<td align="left" colspan="5">
+		<td align="left" colspan="6">
 			<a href="<%=orderDetailLink %>" style="color: <%=theme.negative %>;" target="_blank">
 			<%=order.getRejectReason() == null ? "" : order.getRejectReason() %>
 			</a>
@@ -271,6 +287,12 @@ for (int i=0; i<orders.size(); i++)
 			<%=order.getChildOrdersCount() == 0 ? "" : order.getChildOrdersCount() %>
 			</a>
 		</td>
+		
+		<td align="center">
+			<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+			<%=order.getLastTradeVenue() == null ? "" : order.getLastTradeVenue() %>
+			</a>
+		</td>		
 	<% } %>
 
 </tr>	

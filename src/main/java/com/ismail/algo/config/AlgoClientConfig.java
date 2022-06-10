@@ -20,8 +20,7 @@ public class AlgoClientConfig
     
     private String baseDomain;
 
-    private String urlPrefixWebsockets;
-    
+
                 
     // Algo Server URLs
     
@@ -51,6 +50,14 @@ public class AlgoClientConfig
     private String tradeUrl;
 
     private String tradesUrl;
+    
+    // Websockets
+    
+    private String urlPrefixWebsockets;
+    
+    private String wsTopOfBookUrl;
+    
+    
     
     // Algo ClientID
     

@@ -22,13 +22,7 @@ public class ChildOrder
     public boolean active;
     
     public String status;
-    
-    public double quantityFilled;
-    
-    public double averagePrice;
 
-    public int tradesCount;
-    
     public long createdTime;
 
     public long updatedTime;
@@ -48,5 +42,15 @@ public class ChildOrder
     public double price;
 
     public double stopPrice;
+    
+    // Execution
+    
+    public double quantityFilled;
+    
+    public double averagePrice;
+
+    public int tradesCount;
+    
+    public String lastTradeVenue;
     
 }

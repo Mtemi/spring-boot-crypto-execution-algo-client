@@ -1,5 +1,7 @@
 package com.ismail.algo.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -10,47 +12,49 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument
 {
-    private String instrumentID;
+    public String instrumentID;
 
-    private String symbol;
+    public String symbol;
 
-    private String exchange;
+    public String exchange;
 
-    private String primaryExchange;
+    public String primaryExchange;
 
-    private String desc;
+    public String desc;
 
-    private String instType;
+    public String instType;
 
-    private String baseAsset;
+    public String baseAsset;
 
-    private String quoteAsset;
+    public String quoteAsset;
 
-    private String timezone;
+    public String timezone;
 
-    private double contractSize;
+    public double contractSize;
 
-    private double tickSize;
+    public double tickSize;
 
-    private double tickSizeQty;
+    public double tickSizeQty;
 
-    private double lotSize;
+    public double lotSize;
 
-    private int priceDecimals;
+    public int priceDecimals;
 
-    private int quantityDecimals;
+    public int quantityDecimals;
 
-    private boolean synthetic;
+    public boolean synthetic;
 
-    private long histDataSince;
+    public long histDataSince;
 
-    private long tickDataSince;
+    public long tickDataSince;
 
-    private double lastPrice;
+    public double lastPrice;
 
-    private long lastPriceTime;
+    public long lastPriceTime;
 
-    private boolean live;
+    public boolean live;
     
-    private TopOfBook topOfBook;
+    public TopOfBook topOfBook;
+    
+    public List<TopOfBook> topOfBooks;
 }
