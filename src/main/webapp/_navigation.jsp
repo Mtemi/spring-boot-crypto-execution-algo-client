@@ -22,7 +22,7 @@ String strategyID = AlgoUtil.getParameter(request, "strategyID", "");
     
     <td width=5></td>   
     <td width=150 align="center" bgcolor=<%=spath.contains("/index.jsp") ? theme.tab0s : theme.tab0 %>> 
-        <a href="/index.jsp" style="color: <%=theme.tab0Text %>;">Home</a>       
+        <a href="/" style="color: <%=theme.tab0Text %>;">Home</a>       
     </td>
 
     <td width=5></td>   

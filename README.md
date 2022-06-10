@@ -83,7 +83,7 @@ All the best!
 
 # Execution Algorithms Microservices
 
-![plot](./docs/images/algo-architecture.png)
+![plot](./docs/images/algo-architecture2.png)
 
 
 
