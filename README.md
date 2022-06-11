@@ -4,7 +4,7 @@ This project is a web interface to the Execution Algorithms Microservices
 It demonstrate how to connect to the microservices
 
 
-##### Main features:
+#### Main features:
 - Web Client to place new algo orders and view the orders
 - View Algorithm definitions provided by the microservices
 - View tradeable instrument data
@@ -14,7 +14,7 @@ It demonstrate how to connect to the microservices
 - Monitor the orders as the algo is working it
 - Cancel open orders
 
-##### Algorithms
+#### Algorithms
 Variety of fully working algorithms are demonstrated in this project:
 
 [TWAP strategy](docs/TWAP-strategy.md) 
@@ -35,6 +35,8 @@ Variety of fully working algorithms are demonstrated in this project:
 
 [STOP strategy](docs/STOP-strategy.md)
 
+[SOR strategy](docs/SOR-strategy.md)
+
 [DMA strategy](docs/DMA-strategy.md)
 
 
@@ -46,23 +48,29 @@ You can view a working example here:
 
 Note: If you have a suggestion for an algorithm; send it through and I will implement it as soon as I can
 
-##### Markets
+#### Markets
 - The algos can work any tradeable market; such as Equities, Forex, Crypto, and Futures
 - In this example; we are using Crypto markets as the historical market data, and live feeds are freely available
 - Originally these algos were developed for Equities and Forex; and recently I added support for Cryptos
 
-##### Architecture
+#### Architecture
 - Spring Boot framework
 - Rest API client for: Algorithm definitions, Instrument Data, Orders, Trades
 - WebSockets for: Top Of book feed, Order Book feed, and Order and Trade feed
 - Uses html and jsp to render the pages
 - Uses Ajax SockJS, and Stomp to handle websocket feeds 
 - Uses Jackson RestAPI client
+- Reactive programming architecture
+- Vert.x pattern in implementing algo strategies
+- Concurrent / Multi-threading environment
+- Zero Garbage Collection environment
+- Disruptor Pattern in object pooling
 
-##### Docker
+
+#### Docker
 - The algo web client is dockerrized. You can download a copy from docker and run it
 
-##### Running Instance
+#### Running Instance
 This application is running at this URL:
 
 [http://liquidalpha.mywire.org:8080](http://liquidalpha.mywire.org:8080)
