@@ -72,7 +72,7 @@ Algo algo = (Algo) request.getAttribute("algo");
 	%>
 	
 	<tr>
-		<td valign="top"><%=param.getName() %></td>
+		<td valign="top" title="<%=param.getName() %>" nowrap><%=param.getLabel() %></td>
 		<td valign="top">
 			<%=AlgoUtil.toHtmlFormat(param.getShortDesc()) %>
 			<% if (param.getDesc() != null && param.getDesc().length() > 0) { %>

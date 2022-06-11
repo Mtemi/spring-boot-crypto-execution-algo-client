@@ -22,6 +22,8 @@ public class AlgoParamDef
         
     public boolean mandatory = false;
     
+    public boolean showOnForm = false;
+    
     public String defaultValue = null;
 
     public String defaultValueDesc = null;

@@ -117,6 +117,9 @@ try
 
  		for (AlgoParamDef paramDef : algo.getParams()) 
  		{
+ 		    if (paramDef.isShowOnForm() == false)
+ 		        continue;
+ 		    
 			AlgoParamValue paramVal = orderReq.getAlgoParamByName(paramDef.getName());
 	
 		    String val = AlgoUtil.getParameter(request, "algo_" + paramDef.getName(), null);
@@ -423,6 +426,9 @@ catch (Throwable e)
 
 <% for (AlgoParamDef paramDef : algo.getParams()) {
 
+    if (paramDef.isShowOnForm() == false)
+        continue;
+    
 	int fieldSize=20;
 	int selectFieldWidth=150;
 	
