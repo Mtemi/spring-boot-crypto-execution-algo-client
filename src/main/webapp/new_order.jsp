@@ -287,25 +287,8 @@ catch (Throwable e)
 	
 	</table>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </td>
 </tr>
-
-
 
 
 <tr height=1>
@@ -432,8 +415,9 @@ catch (Throwable e)
 		<% } %>
 		</select>
 	</td>
-	<td>
 	
+	<td>
+	<%=algo.getShortDesc() %>
 	</td>
 </tr>
 

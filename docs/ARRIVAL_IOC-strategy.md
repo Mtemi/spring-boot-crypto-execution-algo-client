@@ -1,10 +1,16 @@
 # ARRIVAL_IOC Strategy
 
-Note: To get an up to date strategy detail; visit our working copy of this project at:
+Smart Immediate or Cancel. Executes market order on soon as possible with IOC order type and cancel the remainder of the order
+
+
+#### Strategy Detail
+![plot](images/ARRIVAL_IOC-strategy.png)
+
+##### Note
+To view up-to-date information about this strategy; and other strategies; visit this website:
+
 [http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
 
-
-![plot](images/ARRIVAL_IOC-strategy.png)
 
 
 

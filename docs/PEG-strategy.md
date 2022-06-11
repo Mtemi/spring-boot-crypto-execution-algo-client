@@ -1,10 +1,15 @@
 # PEG Strategy
 
-Note: To get an up to date strategy detail; visit our working copy of this project at:
+Dynamically pegs a slice to a market price, while keeping the full size hidden 
+
+#### Strategy Detail
+![plot](images/PEG-strategy.png)
+
+##### Note
+To view up-to-date information about this strategy; and other strategies; visit this website:
+
 [http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
 
-
-![plot](images/PEG-strategy.png)
 
 
 

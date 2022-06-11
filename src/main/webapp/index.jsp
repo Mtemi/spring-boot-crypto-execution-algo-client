@@ -43,7 +43,7 @@ catch (Throwable t)
 <td>
 
 
-<h3>Welcome to <b>Algorithmic Execution Microservices Project</b></h3>	
+<h3>Welcome to <b><%=pageInfo.appTitle %></b></h3>	
 
 <br>
 A fullstack Algorithmic Execution Trading Application; that trades any financial market.

@@ -1,10 +1,14 @@
 # ICEBERG Strategy
 
-Note: To get an up to date strategy detail; visit our working copy of this project at:
-[http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
+Exposes a fixed small amount of the total order quantity at a time; while keeping the full size hidden 
 
-
+#### Strategy Detail
 ![plot](images/ICEBERG-strategy.png)
+
+##### Note
+To view up-to-date information about this strategy; and other strategies; visit this website:
+
+[http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
 
 
 

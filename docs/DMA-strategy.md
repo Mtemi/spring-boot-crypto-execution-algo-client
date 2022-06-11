@@ -1,10 +1,14 @@
 # DMA Strategy
 
-Note: To get an up to date strategy detail; visit our working copy of this project at:
-[http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
+Direct to Market. Routes the order to the primary exchange 
 
-
+#### Strategy Detail
 ![plot](images/DMA-strategy.png)
 
+
+##### Note
+To view up-to-date information about this strategy; and other strategies; visit this website:
+
+[http://liquidalpha.mywire.org:8080/algos.jsp](http://liquidalpha.mywire.org:8080/algos.jsp)
 
 
