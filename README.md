@@ -112,6 +112,22 @@ All the best!
 - Docker
 - Kubernetes
 
+### Docker
+This application is dockerized with Dockerfile
+
+To build docker:
+
+- docker build --tag execution-algo-client:1.0 .
+
+### Docker Hub image
+
+Latest docker image is available at my dockerhub; built with jdk17, running on port 9080
+
+[hub.docker.com/r/ismailfer/execution-algo-client](https://hub.docker.com/r/ismailfer/execution-algo-client)
+
+
+
+
 
 
 

@@ -23,11 +23,40 @@ PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
 pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books (Multi Sources)";
 
+String instID = "";
+
 List<Instrument> instruments = null;
+Instrument inst = null;
 
 try
 {
     instruments = apiService.getInstruments();
+    
+    String instID_Default = (instruments.size() > 0 ? instruments.get(0).getInstrumentID() : "");
+    
+    for (Instrument item : instruments)
+    {
+        if (item.getInstrumentID().startsWith("BTC"))
+        {
+            instID_Default = item.getInstrumentID();
+            break;
+        }
+    }
+    
+    
+    instID = AlgoUtil.getParameter(request, "instID",  instID_Default);
+    
+    if (AlgoUtil.isDefined(instID) && instruments != null)
+    {
+        for (Instrument item : instruments)
+        {
+            if (item.getInstrumentID().equals(instID))
+            {
+                inst = item;
+                break;
+            }
+        }
+    }
 }
 catch (Throwable t)
 {    
@@ -40,9 +69,27 @@ catch (Throwable t)
 
 <br>
 
+
+
 <% if (instruments != null) { %>
 
-<table width="1200" cellpadding=5 align="center">
+
+<table width="1300" cellpadding=5 align="center">
+<form name="frm">
+<tr>
+	<td colspan=11 align="center">
+
+        <select name="instID" onChange="fnSubmit();" style="width: 200px; height: 30px; font-size: 20px;">
+            <option value="">
+            <% for (Instrument item : instruments) { %>
+               <option value="<%=item.getInstrumentID() %>" <%=item.getInstrumentID().equals(instID) ? "selected" : "" %>><%=item.getInstrumentID() %> 
+            <% } %>                 
+        </select> 
+            
+        	
+	</td>
+</tr>
+</form>
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td colspan=1 rowspan=2 width="120"><b>InstrumentID</b></td>
@@ -56,6 +103,8 @@ catch (Throwable t)
 	<td colspan=1 rowspan=2 align="right"  width="100"><b>Ask Qty</b></td>
 
 	<td colspan=2 rowspan=1 align="center" width="120"><b>Spread</b></td>
+
+	<td colspan=1 rowspan=2 align="center" ><b>Live</b></td>
 	
 	<td colspan=1 rowspan=2 align="right" width="140"><b>Update Time</b></td>
 
@@ -69,13 +118,10 @@ catch (Throwable t)
 </tr>
 
 <% 
-for (int i=0; i<instruments.size(); i++) 
-{ 
-    Instrument inst = instruments.get(i);
-    
+if (inst != null) 
+{    
     // replace the dots; as it causes issues with JS
     String elemID = inst.getInstrumentID().replaceAll("\\.", "_") + "_" + inst.topOfBook.mdSource.replaceAll("\\.", "_");
-    
 
 %>
 
@@ -95,6 +141,8 @@ for (int i=0; i<instruments.size(); i++)
 
 	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
 	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
+
+	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;"></td>
 
 	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
 
@@ -129,6 +177,8 @@ for (TopOfBook tob : inst.topOfBooks)
 	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
 	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
 
+	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;"></td>
+
 	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
 
 </tr>	
@@ -142,7 +192,7 @@ for (TopOfBook tob : inst.topOfBooks)
 <tr>
     <td id="cxtTime" colspan=5 align="left" style="color: <%=theme.bodyTextLight2 %>">    	
     </td>
-    <td id="msgStatus" colspan=6 align="right">
+    <td id="msgStatus" colspan=7 align="right">
     </td>
     
 </tr>
@@ -151,17 +201,28 @@ for (TopOfBook tob : inst.topOfBooks)
 
 
 
+<script type="text/javascript" charset="utf-8">
 
-
+function fnSubmit()
+{
+    var url = '<%=request.getServletPath() %>';
+    url += '?instID=' + frm.instID.value;
+    
+    document.location = url;
+}
+</script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <%
+if (AlgoUtil.isDefined(instID))
+{
 String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
 
 wsURL += "?multiSources=true";
+wsURL += "&instID=" + instID;
 
 %>
 
@@ -178,7 +239,7 @@ var socket = new WebSocket('<%=wsURL %>');
 socket.onopen = function(e) 
 {
 	msgStatus.textContent = '';
-	//msgStatus.textContent = 'Connected';
+	msgStatus.textContent = 'Connected';
     msgStatus.style.color = 'green';
 };
 
@@ -210,6 +271,7 @@ socket.onmessage = function(event)
     var idBidPx = document.querySelector('#bidPx_'+elemID);
     var idAskQty = document.querySelector('#askQty_'+elemID);
     var idAskPx = document.querySelector('#askPx_'+elemID);
+    var idLive = document.querySelector('#live_'+elemID);
     var idUtime = document.querySelector('#utime_'+elemID);
     var idSpread = document.querySelector('#spread_'+elemID);
     var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
@@ -222,11 +284,14 @@ socket.onmessage = function(event)
 	idSpread.textContent = message.spreadStr;
 	idSpreadBps.textContent = message.spreadBpsStr;
 
+	idLive.textContent = message.live ? "Y" : "N";
+
 	idUtime.textContent = message.updateTimeDesc;
     
 };
 
 </script>
+<% } %>
 
 <% } %>
 

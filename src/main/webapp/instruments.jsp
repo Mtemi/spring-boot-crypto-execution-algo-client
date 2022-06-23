@@ -57,7 +57,7 @@ catch (Throwable t)
 	
 	<td colspan=1 rowspan=2 align="right"><b>Last<br>Price</b></td>
 
-	<td colspan=4 rowspan=1 align="center"><b>Top Of Book</b></td>
+	<td colspan=5 rowspan=1 align="center"><b>Top Of Book</b></td>
 
 </tr>
 
@@ -67,34 +67,47 @@ catch (Throwable t)
 	<td colspan=1 rowspan=1 align="right"><b>Bid Px</b></td>
 	<td colspan=1 rowspan=1 align="right"><b>Ask Px</b></td>
 	<td colspan=1 rowspan=1 align="right"><b>Ask Qty</b></td>
+	<td colspan=1 rowspan=1 align="center"><b>Live</b></td>
 
 </tr>
 
 <% for (int i=0; i<instruments.size(); i++) { 
     Instrument inst = instruments.get(i);
+    
+    String color = inst.getTopOfBook().isLive() ? theme.bodyText : theme.bodyTextLight2;
 %>
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
-	<td valign="top"><%=inst.getInstrumentID() %></td>
-	<td valign="top"><%=inst.getDesc() %></td>
-	<td valign="top"><%=inst.getInstType() %></td>
-	<td valign="top"><%=inst.getBaseAsset() %></td>
-	<td valign="top"><%=inst.getQuoteAsset() %></td>
-	<td valign="top"><%=inst.getTimezone() %></td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTickSize(), inst.getPriceDecimals()) %></td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTickSizeQty(), inst.getQuantityDecimals()) %></td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getContractSize(), 2) %></td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getLotSize(), 0) %></td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getLastPrice(), inst.getPriceDecimals()) %></td>
+	<td valign="top" style="color: <%=color %>;"><b><%=inst.getInstrumentID() %></b></td>
+	<td valign="top" style="color: <%=color %>;"><b><%=inst.getDesc() %></b></td>
+	<td valign="top" style="color: <%=color %>;"><%=inst.getInstType() %></td>
+	<td valign="top" style="color: <%=color %>;"><%=inst.getBaseAsset() %></td>
+	<td valign="top" style="color: <%=color %>;"><%=inst.getQuoteAsset() %></td>
+	<td valign="top" style="color: <%=color %>;"><%=inst.getTimezone() %></td>
+	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getTickSize(), inst.getPriceDecimals()) %></td>
+	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getTickSizeQty(), inst.getQuantityDecimals()) %></td>
+	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getContractSize(), 2) %></td>
+	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getLotSize(), 0) %></td>
+	<td valign="top" style="color: <%=color %>;" align="right">
+		<%=AlgoUtil.numericFormat(inst.getLastPrice(), inst.getPriceDecimals()) %>
+	</td>
 
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getBidQty(), inst.getQuantityDecimals()) %></td>
-	<td valign="top" align="right" style="color: <%=theme.bid %>;">
+	<td valign="top" style="color: <%=color %>;" align="right" align="right">
+		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBidQty(), inst.getQuantityDecimals()) %>
+	</td>
+	<td valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.bid : color %>;">
 		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBid(), inst.getPriceDecimals()) %>
 	</td>
-	<td valign="top" align="right" style="color: <%=theme.ask %>;">
+	<td valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.ask : color %>;">
 		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAsk(), inst.getPriceDecimals()) %>
 	</td>
-	<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getAskQty(), inst.getQuantityDecimals()) %></td>
+	<td valign="top" align="right" style="color: <%=color %>;" >
+		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAskQty(), inst.getQuantityDecimals()) %>
+	</td>
+
+	<td valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;">
+		<%=inst.getTopOfBook().isLive() ? "Y" : "N" %>
+	</td>
 
 </tr>	
 

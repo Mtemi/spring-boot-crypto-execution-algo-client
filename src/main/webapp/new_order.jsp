@@ -1,3 +1,5 @@
+<%@page import="com.ismail.algo.model.TopOfBook"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.ismail.algo.AppClientServices"%>
@@ -33,7 +35,7 @@ pageInfo.appTitle = algoConfig.getWebMainTitle();
 pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - New Order Request";
 
 
-String strategyID = AlgoUtil.getParameter(request, "strategyID", "TWAP");
+String strategyID = AlgoUtil.getParameter(request, "strategyID", "SOR");
 String instrumentID = AlgoUtil.getParameter(request, "instrumentID", null);
 String act = AlgoUtil.getParameter(request, "act", null);
 
@@ -48,6 +50,8 @@ double displayQtyDefault = 0.0;
 
 // Create an order request; with some pre-populated values
 NewOrderRequest orderReq = null;
+
+SimpleDateFormat timeFormatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
 
 String spath = request.getServletPath();
 
@@ -71,7 +75,7 @@ try
 
  	// work out default qty to populate
     qtyDefault = inst.getTickSizeQty();
-    if (inst != null && inst.isLive())
+    if (inst != null)
     {
         qtyDefault = (inst.getTopOfBook().getBidQty() + inst.getTopOfBook().getAskQty()) / 2.0;
     }
@@ -233,7 +237,7 @@ catch (Throwable e)
 	<table width="100%" cellpadding=5 align="center">
 	
 	<tr>
-		<td colspan="8" align="right">
+		<td colspan="10" align="right">
 
 			<input type="button" name="btnRefresh" 
 				value="Refresh" style="width: 100px;"
@@ -253,6 +257,10 @@ catch (Throwable e)
 		<td colspan=1 rowspan=2 width="100" align="right"><b>Ask Qty</b></td>
 
 		<td colspan=2 rowspan=1 width="100" align="center"><b>Spread</b></td>		
+
+		<td colspan=1 rowspan=2 width="60" align="center"><b>Live</b></td>
+
+		<td colspan=1 rowspan=2 width="150" align="right"><b>Time</b></td>
 
 	</tr>
 	
@@ -283,6 +291,14 @@ catch (Throwable e)
 
 		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpread(), inst.getPriceDecimals()) %></td>
 		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpreadBps(), 3) %></td>
+
+		<td valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.bodyText : theme.negative %>;">
+			<%=inst.getTopOfBook().isLive() ? "Y" : "N" %>
+		</td>
+	
+	    <td valign="top" align="right">
+	    	<%=timeFormatter.format(inst.getTopOfBook().getUpdateTime()) %>
+	    </td>
 	
 	</tr>	
 	
@@ -531,6 +547,73 @@ catch (Throwable e)
 		        <% } %>         
 		        </select>
 
+			<!--  Liquidity -->
+        	<% } else if ("enum".equalsIgnoreCase(paramDef.getType()) && "Liquidity".equalsIgnoreCase(paramDef.getName())) { %>
+        	
+		        <select name="algo_<%=paramDef.getName() %>" style="width: <%=selectFieldWidth %>px;">	        	        
+
+		        <% 
+		        // build up valid values for this instrument
+		        ArrayList<String> validVals = new ArrayList<>();
+
+		        for (AlgoParamValidValue item : paramDef.getValidValues()) 
+		        {
+		            validVals.add(item.getValue());
+		        }
+		        
+		        if (inst.getTopOfBooks() != null)
+		        {
+		            for (TopOfBook book : inst.getTopOfBooks())
+		            {
+		                if (book.isLive())
+		                	validVals.add(book.getMdSource());
+		            }
+		        }
+		        
+		        for (String item : validVals) 
+		        {
+		            boolean selected = false;
+		            
+		            if (paramVal != null)
+		            {    
+		                selected = item.equals(paramVal.getValue());		            
+		            }
+		            else
+		            {
+		             	selected = item.equals(paramDef.getDefaultValue());   
+		            }
+		            
+		            %> 
+		        	<option value="<%=item %>" <%=selected ? "selected" : "" %>><%=item %>
+		        <% } %>          
+		        </select>
+		        
+		        
+
+        	<% } else if ("enum".equalsIgnoreCase(paramDef.getType()) && "Text".equalsIgnoreCase(paramDef.getTypeFormat())) { %>
+        	
+		        <select name="algo_<%=paramDef.getName() %>" style="width: <%=selectFieldWidth %>px;">	        	        
+        		<% if (paramDef.isMandatory() == false) { %>
+        			<option value="" <%="".equals("") ? "selected" : "" %>>
+        		<% } %>
+
+		        <% for (AlgoParamValidValue item : paramDef.getValidValues()) { 
+		        
+		            boolean selected = false;
+		            
+		            if (paramVal != null)
+		            {    
+		                selected = item.getValue().equals(paramVal.getValue());		            
+		            }
+		            else
+		            {
+		             	selected = item.getValue().equals(paramDef.getDefaultValue());   
+		            }
+		        %> 
+		        	<option value="<%=item.getValue() %>" <%=selected ? "selected" : "" %>><%=item.getValue() %> - <%=item.getShortDesc() %>
+		        <% } %>          
+		        </select>
+		        		        
         	<% } else if ("enum".equalsIgnoreCase(paramDef.getType())) { %>
         	
 		        <select name="algo_<%=paramDef.getName() %>" style="width: <%=selectFieldWidth %>px;">	        	        
@@ -542,6 +625,7 @@ catch (Throwable e)
 		        	<option value="<%=item.getValue() %>" <%=paramVal != null && item.getValue().equals(paramVal.getValue()) ? "selected" : "" %>><%=item.getValue() %> - <%=item.getShortDesc() %>
 		        <% } %>          
 		        </select>
+
 
         	<% } else if ("time".equalsIgnoreCase(paramDef.getType()) && "Long".equalsIgnoreCase(paramDef.getTypeFormat()) == false) { 
         		SimpleDateFormat algoParamFormatter = AlgoUtil.getFormatter("HH:mm:ss", inst.getTimezone());

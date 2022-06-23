@@ -175,6 +175,27 @@ public class AlgoUtil
             return pDefaultValue;
     }
 
+    
+    public static boolean getParameterAsBoolean(HttpServletRequest request, String pParamName)
+    {
+        String str = request.getParameter(pParamName);
+
+        if (str != null && str.length() > 0)
+            return Boolean.parseBoolean(str);
+        else
+            throw new BusinessApiException("Required parameter missing: " + pParamName);
+    }
+
+    public static boolean getParameterAsBoolean(HttpServletRequest request, String pParamName, boolean pDefaultValue)
+    {
+        String str = request.getParameter(pParamName);
+
+        if (str != null && str.length() > 0)
+            return Boolean.parseBoolean(str);
+        else
+            return pDefaultValue;
+    }
+    
     /**
      * Get Request Page Info; and if null; create one
      * 

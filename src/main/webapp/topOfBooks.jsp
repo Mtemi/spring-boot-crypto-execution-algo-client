@@ -41,7 +41,7 @@ catch (Throwable t)
 
 <% if (instruments != null) { %>
 
-<table width="1100" cellpadding=5 align="center">
+<table width="1300" cellpadding=5 align="center">
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td colspan=1 rowspan=2><b>InstrumentID</b></td>
@@ -56,6 +56,7 @@ catch (Throwable t)
 
 	<td colspan=2 rowspan=1 align="center"><b>Spread</b></td>
 	
+	<td colspan=1 rowspan=2 align="center"><b>Live</b></td>
 	<td colspan=1 rowspan=2 align="right"><b>Update Time</b></td>
 
 </tr>
@@ -72,26 +73,29 @@ for (int i=0; i<instruments.size(); i++)
 { 
     Instrument inst = instruments.get(i);
     
+    String color = inst.getTopOfBook().isLive() ? theme.bodyText : theme.bodyTextLight2;
+    
     // replace the dots; as it causes issues with JS
     String elemID = inst.getInstrumentID().replaceAll("\\.", "_");
 %>
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
-	<td id="symbol_<%=elemID %>" valign="top"><%=inst.getInstrumentID() %></td>
-	<td valign="top"><%=inst.getDesc() %></td>
-	<td valign="top"><%=inst.getInstType() %></td>
+	<td id="symbol_<%=elemID %>" style="color: <%=color %>;" valign="top"><b><%=inst.getInstrumentID() %></b></td>
+	<td valign="top" style="color: <%=color %>;" ><b><%=inst.getDesc() %></b></td>
+	<td valign="top" style="color: <%=color %>;" ><%=inst.getInstType() %></td>
 
-	<td id="mdSource_<%=elemID %>" valign="top"></td>
+	<td id="mdSource_<%=elemID %>" style="color: <%=color %>;" valign="top"><%=inst.topOfBook.getMdSource() %></td>
 
-	<td id="bidQty_<%=elemID %>" valign="top" align="right"></td>
-	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=theme.bid %>;"></td>
-	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=theme.ask %>;"></td>
-	<td id="askQty_<%=elemID %>" valign="top" align="right"></td>
+	<td id="bidQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.bid : color %>;"></td>
+	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.ask : color %>;"></td>
+	<td id="askQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
 
-	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
-	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
+	<td id="spread_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+	<td id="spreadBps_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
 
-	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
+	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : color %>;" ></td>
+	<td id="utime_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
 
 </tr>	
 
@@ -102,7 +106,7 @@ for (int i=0; i<instruments.size(); i++)
     <td id="cxtTime" colspan=5 align="left" style="color: <%=theme.bodyTextLight2 %>">
     	
     </td>
-    <td id="msgStatus" colspan=6 align="right"></td>
+    <td id="msgStatus" colspan=7 align="right"></td>
     
 </tr>
 
@@ -131,35 +135,23 @@ String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUr
 var msgStatus = document.querySelector('#msgStatus');
 var cxtTime = document.querySelector('#cxtTime');
 
-
 var socket = new WebSocket('<%=wsURL %>');
  
 socket.onopen = function(e) 
 {
-	socket.send("test message");
-	
 	msgStatus.textContent = 'Connected';
     msgStatus.style.color = 'green';
-    
-    // Subscribe to the Public Topic
-    //stompClient.subscribe('/topic/public', onMessageReceived);
-
-    // Tell your username to the server
-    //stompClient.send("/app/ws.register", {}, JSON.stringify({username: 'user_xyz'}) );
-
 };
 
 socket.onclose = function(event) 
 {
 	if (event.wasClean) 
 	{
-	  console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+	 	console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
 	} 
 	else 
 	{
-	  // e.g. server process killed or network down
-	  // event.code is usually 1006 in this case
-	  console.log('[close] Connection died');
+  		console.log('[close] Connection died');
 	}
 	
 	msgStatus.textContent = 'Disconnected';
@@ -177,36 +169,23 @@ socket.onerror = function(error)
 
 socket.onmessage = function(event) 
 {
-	//console.log("onMessageReceived() " + event.data);	
 	
     var message = JSON.parse(event.data);
 
-    // replace the dot; as it causes issues with JS
-    var elemID = message.instrumentID.replace('.', '_');
+    //console.log(event.data);
     
-    var idSymbol = document.querySelector('#symbol_'+elemID);
-    var idMDSource = document.querySelector('#mdSource_'+elemID);
+    // replace the dot; as it causes issues with JS
+    var elemID = message.instrumentID.replace('.', '_');    
     
     var idBidQty = document.querySelector('#bidQty_'+elemID);
     var idBidPx = document.querySelector('#bidPx_'+elemID);
     var idAskQty = document.querySelector('#askQty_'+elemID);
     var idAskPx = document.querySelector('#askPx_'+elemID);
+    var idLive = document.querySelector('#live_'+elemID);
     var idUtime = document.querySelector('#utime_'+elemID);
-
     var idSpread = document.querySelector('#spread_'+elemID);
     var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
-    
-    if (idSymbol == null)
-    {
-    	console.log("error; cannot find idSymbol");
-    	return;
-    }
-    
-	//idSymbol.textContent = msgSymbol;
-		
-	idSymbol.textContent = message.instrumentID;
-	idMDSource.textContent = message.mdSource;
-	
+			
 	idBidQty.textContent = message.bidQtyStr;
 	idBidPx.textContent = message.bidStr;
 	idAskQty.textContent = message.askQtyStr;
@@ -215,13 +194,9 @@ socket.onmessage = function(event)
 	idSpread.textContent = message.spreadStr;
 	idSpreadBps.textContent = message.spreadBpsStr;
 
-	idUtime.textContent = message.updateTimeDesc;
-    
-	//cxtTime.textContent = message.cxtTimeStr;
+	idLive.textContent = message.live ? "Y" : "N";
 	
-    //msgStatus.textContent = 'Connected';
-    //msgStatus.style.color = 'green';
-    
+	idUtime.textContent = message.updateTimeDesc;
 };
 
 </script>

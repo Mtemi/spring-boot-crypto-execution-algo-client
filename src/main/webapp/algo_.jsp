@@ -84,13 +84,18 @@ Algo algo = (Algo) request.getAttribute("algo");
 		<td valign="top"  align="center"><%=param.isMandatory() ? "Yes" : "" %></td>
 		<td valign="top"  align="center"><%=param.getType() %></td>
 		<td valign="top"  align="center">
-			<%=param.getDefaultValue() == null ? "" : param.getDefaultValue() %>
+			<% if (AlgoUtil.isDefined(param.getDefaultValueDesc())) { %>
+				<%=param.getDefaultValueDesc() %>
+			<% } else if (AlgoUtil.isDefined(param.getDefaultValue())) { %>
+				<%=param.getDefaultValue() %>
+			<% } %>
 		</td>
+		
 		<td valign="top" nowrap>
 			<% for (int c=0; c<param.getValidValuesCount(); c++) { 
 			    AlgoParamValidValue validValue = param.getValidValues().get(c);
 			%>
-				<li><%=validValue.getValue() %> - <%=validValue.getShortDesc() %><br> 
+				<li><%=validValue.getValue() %><%=AlgoUtil.isDefined(validValue.getShortDesc()) ? " - " + validValue.getShortDesc() : "" %><br> 
 			<% } %>
 			
 		</td>
