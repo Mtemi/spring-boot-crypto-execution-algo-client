@@ -610,7 +610,7 @@ catch (Throwable e)
 		             	selected = item.getValue().equals(paramDef.getDefaultValue());   
 		            }
 		        %> 
-		        	<option value="<%=item.getValue() %>" <%=selected ? "selected" : "" %>><%=item.getValue() %> - <%=item.getShortDesc() %>
+		        	<option value="<%=item.getValue() %>" <%=selected ? "selected" : "" %>><%=item.getValue() %><%=AlgoUtil.isDefined(item.getShortDesc()) ? " - " + item.getShortDesc() : "" %>
 		        <% } %>          
 		        </select>
 		        		        

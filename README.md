@@ -35,6 +35,8 @@ Variety of fully working algorithms are demonstrated in this project:
 
 [STOP strategy](docs/STOP-strategy.md)
 
+[TRAILING STOP strategy](docs/TRAILING_STOP-strategy.md)
+
 [SOR strategy](docs/SOR-strategy.md)
 
 [DMA strategy](docs/DMA-strategy.md)
