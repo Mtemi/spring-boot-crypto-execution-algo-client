@@ -39,6 +39,8 @@ Variety of fully working algorithms are demonstrated in this project:
 
 [SOR strategy](docs/SOR-strategy.md)
 
+[DARK strategy](docs/DARK-strategy.md)
+
 [DMA strategy](docs/DMA-strategy.md)
 
 

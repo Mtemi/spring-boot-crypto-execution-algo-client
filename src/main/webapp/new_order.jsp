@@ -561,7 +561,7 @@ catch (Throwable e)
 		            validVals.add(item.getValue());
 		        }
 		        
-		        if (inst.getTopOfBooks() != null)
+		        if (strategyID.equals("DARK") == false && inst.getTopOfBooks() != null)
 		        {
 		            for (TopOfBook book : inst.getTopOfBooks())
 		            {
