@@ -111,8 +111,8 @@ Algo algo = (Algo) request.getAttribute("algo");
 
 <!-- Execution Styles -->
 
-<% if (algo.getExecStyleParameter() != null) {
-    AlgoParamDef param = algo.getExecStyleParameter();
+<% if (algo.getParameterByName("ExecStyle") != null) {
+    AlgoParamDef param = algo.getParameterByName("ExecStyle");
     %>
 
 <!-- spacer 
@@ -143,6 +143,41 @@ Algo algo = (Algo) request.getAttribute("algo");
 	<tr>
 		<td width="15%" valign="top" nowrap bgcolor="<%=theme.rawHighlight %>">
 			<%=validValue.getShortDesc() %>
+		</td>
+		<td width="85%" valign="top">
+			<%=AlgoUtil.toHtmlFormat(validValue.getDesc()) %>
+		</td>
+	</tr>	
+	
+	<% } %>
+	
+	</table>
+
+</td>
+</tr>
+
+<% } %>
+
+
+<!-- Liquidity -->
+
+<% if (algo.getParameterByName("Liquidity") != null) {
+    AlgoParamDef param = algo.getParameterByName("Liquidity");
+    %>
+
+<tr><td><b>Liquidity</b></td></tr>
+
+<tr>
+<td>
+	<table width="100%" cellspacing=1 cellpadding=10 border=1 align="center">
+			
+	<% for (int c=0; c<param.getValidValuesCount(); c++) { 
+	    AlgoParamValidValue validValue = param.getValidValues().get(c);
+	%>
+	
+	<tr>
+		<td width="15%" valign="top" nowrap bgcolor="<%=theme.rawHighlight %>">
+			<%=validValue.getValue() %>
 		</td>
 		<td width="85%" valign="top">
 			<%=AlgoUtil.toHtmlFormat(validValue.getDesc()) %>

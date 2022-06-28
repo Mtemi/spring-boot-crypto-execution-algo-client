@@ -90,8 +90,8 @@ If you have a suggestion on a new algo; or tweaking existing algo; send us your 
 <h3>Github Code base</h3>
 Source code for this project is available on my GitHub:
 <p>
-<a href="https://github.com/ismailfer/algo-client-springboot" target="_blank">
-https://github.com/ismailfer/algo-client-springboot
+<a href="https://github.com/ismailfer/spring-boot-crypto-execution-algo-client" target="_blank">
+https://github.com/ismailfer/spring-boot-crypto-execution-algo-client
 </a>
 
 </td>

@@ -28,14 +28,14 @@ public class Algo
     {
         return (params==null ? 0 : params.size());
     }
-    
-    public AlgoParamDef getExecStyleParameter()
+        
+    public AlgoParamDef getParameterByName(String pParamName)
     {
         if (params != null)
         {
             for (AlgoParamDef param : params)
             {
-                if ("ExecStyle".equals(param.getName()))
+                if (pParamName.equals(param.getName()))
                     return param;
             }
         }
