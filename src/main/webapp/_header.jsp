@@ -23,22 +23,6 @@ String spath = request.getServletPath();
 	
 	<link type="text/css" rel="StyleSheet" media="all" href="/css/combined-<%=algoConfig.getWebColorTheme() %>.css" />
 
-  	<script type="text/javaScript" src="/js/common.js"></script>
-  		
-	<style>
-	.footer 
-	{
-		position:fixed;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		background-color: <%=theme.rawHighlight %>;
-		color: white;
-		height: 40px;
-		text-align: center; 
-		vertical-align: middle;
-	}
-	</style>	
 </head>
 
 <body bgcolor="<%=theme.bodyBg %>" link="<%=theme.bodyLink %>" vlink="<%=theme.bodyVisitedLink %>" alink="<%=theme.bodyActiveLink %>"

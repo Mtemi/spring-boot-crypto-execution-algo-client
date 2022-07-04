@@ -82,7 +82,9 @@ Algo algo = (Algo) request.getAttribute("algo");
 			<% } %>
 		</td>
 		<td valign="top"  align="center"><%=param.isMandatory() ? "Yes" : "" %></td>
-		<td valign="top"  align="center"><%=param.getType() %></td>
+		<td valign="top"  align="center">
+			<%=AlgoUtil.isDefined(param.getTypeFormat()) ? param.getTypeFormat() : param.getType() %>
+		</td>
 		<td valign="top"  align="center">
 			<% if (AlgoUtil.isDefined(param.getDefaultValueDesc())) { %>
 				<%=param.getDefaultValueDesc() %>

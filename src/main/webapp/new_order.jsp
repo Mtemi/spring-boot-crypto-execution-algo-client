@@ -39,6 +39,8 @@ String strategyID = AlgoUtil.getParameter(request, "strategyID", "SOR");
 String instrumentID = AlgoUtil.getParameter(request, "instrumentID", null);
 String act = AlgoUtil.getParameter(request, "act", null);
 
+boolean showAlgo = AlgoUtil.getParameterAsBoolean(request, "showAlgo", false);
+
 List<Algo> algoList = null;
 List<Instrument> instrumentList = null;
 
@@ -217,6 +219,7 @@ catch (Throwable e)
 
 <form name="frm" action="<%=spath %>" method="post">
 <input type="hidden" name="act" value="" />
+<input type="hidden" name="showAlgo" value="<%=showAlgo %>" />
 
 <tr bgcolor="<%=theme.rawHighlight %>" height="25">
 	<td align="center" colspan=3 onClick="frm.act.value='refresh'; frm.submit();">
@@ -706,14 +709,14 @@ catch (Throwable e)
 <!--  Algo detail -->
 <br>
 <table width="1100" align=center>
-<tr bgcolor="<%=theme.rawHighlight %>">
-	<td align="center" onClick="javascript: toggleDisplay('algoDetail');">
-		<b>Algo Strategy Detail</b>
+<tr bgcolor="<%=theme.rawHighlight %>" height="30">
+	<td align="center" onClick="javascript: toggleShowAlgo();">
+		<b>View Algo Strategy Detail</b>
 	</td>
 </tr>
 <tr>
     <td align="center">        
-    <div id="algoDetail" style="display: none;">
+    <div id="algoDetail" style="display: <%=showAlgo ? "block" : "none" %>;">
 
 		<jsp:include page="algo_.jsp" flush="true" />
 
@@ -724,6 +727,16 @@ catch (Throwable e)
 
 
 <% } %>
+
+
+<script type="text/javascript">
+function toggleShowAlgo(divID) 
+{
+	frm.act.value='refresh';
+	frm.showAlgo.value = !(frm.showAlgo.value == 'true');
+	frm.submit();
+}
+</script>
 
 <jsp:include page="_footer.jsp" flush="true" />
 
