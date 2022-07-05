@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ismail.algo.AlgoConstants;
+import com.ismail.algo.AlgoUtil;
 import com.ismail.algo.config.AlgoClientConfig;
 import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoApiError;
@@ -651,7 +652,7 @@ public class AlgoClientApiService
                 throw new BusinessApiException(response.statusCode(), "Unexpected Response");
             }
         }
-        
+
         catch (InterruptedException e)
         {
             log.error(e.getMessage(), e);
@@ -672,7 +673,7 @@ public class AlgoClientApiService
         }
     }
 
-    public List<ChildOrder> getChildOrdersByParentOrderID(long orderID, int maxRecords)
+    public List<ChildOrder> getChildOrdersByParentOrderID(long orderID, int pageNum, int pageSize)
     {
 
         try
@@ -682,7 +683,9 @@ public class AlgoClientApiService
 
             url += "?parentOrderID=" + orderID;
 
-            url += "&maxRecs=" + maxRecords;
+            url += "&pageNum=" + pageNum;
+
+            url += "&pageSize=" + pageSize;
 
             HttpClient client = HttpClient.newHttpClient();
 
@@ -736,6 +739,7 @@ public class AlgoClientApiService
         }
 
     }
+
 
     public ChildOrder getChildOrderByChildOrderID(long childOrderID)
     {
@@ -798,7 +802,7 @@ public class AlgoClientApiService
 
     }
 
-    public List<Trade> getTradesByParentOrderID(long parentOrderID, int maxRecords)
+    public List<Trade> getTradesByParentOrderID(long parentOrderID, int pageNum, int pageSize)
     {
 
         try
@@ -808,7 +812,8 @@ public class AlgoClientApiService
 
             url += "?parentOrderID=" + parentOrderID;
 
-            url += "&maxRecs=" + maxRecords;
+            url += "&pageNum=" + pageNum;
+            url += "&pageSize=" + pageSize;
 
             HttpClient client = HttpClient.newHttpClient();
 
@@ -893,11 +898,11 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                Trade[] items = mapper.readValue(body, Trade[].class);
+                    Trade[] items = mapper.readValue(body, Trade[].class);
 
-                List<Trade> list = Arrays.asList(items);
+                    List<Trade> list = Arrays.asList(items);
 
-                return list;
+                    return list;
                 }
             }
             else
@@ -956,9 +961,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                Trade items = mapper.readValue(body, Trade.class);
+                    Trade items = mapper.readValue(body, Trade.class);
 
-                return items;
+                    return items;
                 }
             }
             else
@@ -994,8 +999,6 @@ public class AlgoClientApiService
         {
             String url = config.getUrlPrefix();
             url += config.getOrderUrl();
-
-            url += "?action=newOrder";
 
             HttpClient client = HttpClient.newHttpClient();
 
@@ -1061,7 +1064,7 @@ public class AlgoClientApiService
 
     }
 
-    public OrderCancelResponse submitOrderCancelRequest(OrderCancelRequest orderRequest)
+    public OrderCancelResponse cancelOrder(String clientID, String clientOrderID, long orderID)
     {
 
         try
@@ -1069,22 +1072,26 @@ public class AlgoClientApiService
             String url = config.getUrlPrefix();
             url += config.getOrderUrl();
 
-            url += "?action=cancel";
+            url += "?clientID=" + clientID;
+
+            if (AlgoUtil.isDefined(clientOrderID))
+                url += "&clientOrderID=" + clientOrderID;
+
+            if (orderID > 0L)
+                url += "&orderID=" + orderID;
 
             HttpClient client = HttpClient.newHttpClient();
 
             ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(orderRequest);
-            // StringEntity json = new StringEntity(addPostStr, ContentType.APPLICATION_JSON);
 
-            log.info("submitOrderCancelRequest() >>\n" + json);
+            log.info("cancelOrder()");
 
             HttpRequest request = HttpRequest.newBuilder() //
                     .uri(URI.create(url)) //
                     .header("content-type", "application/json") //
                     .header("accept", "application/json") //
                     //.header(BinanceApiConstants.API_KEY_HEADER, apiKey)
-                    .POST(BodyPublishers.ofString(json)) //
+                    .DELETE() //
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -1093,7 +1100,7 @@ public class AlgoClientApiService
             {
                 String body = response.body();
 
-                log.info("submitOrderCancelRequest() <<\n" + body);
+                log.info("cancelOrder() <<\n" + body);
 
                 if (body.contains("errorCode"))
                 {

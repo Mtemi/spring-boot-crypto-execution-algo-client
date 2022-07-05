@@ -155,7 +155,7 @@ public class AlgoClientApiServiceTest
     {
         long parentOrderID = 1;
 
-        List<ChildOrder> list = service.getChildOrdersByParentOrderID(parentOrderID, config.childOrdersMaxRecordsDefault);
+        List<ChildOrder> list = service.getChildOrdersByParentOrderID(parentOrderID, 1, 50);
 
         Assertions.assertTrue(list != null && list.size() > 0);
 
@@ -179,7 +179,7 @@ public class AlgoClientApiServiceTest
     {
         long parentOrderID = 1;
 
-        List<Trade> list = service.getTradesByParentOrderID(parentOrderID, config.tradesMaxRecordsDefault);
+        List<Trade> list = service.getTradesByParentOrderID(parentOrderID, 1, 50);
 
         Assertions.assertTrue(list != null && list.size() > 0);
 
@@ -298,8 +298,10 @@ public class AlgoClientApiServiceTest
 
                 System.out.println("submitOrderCancelRequest:\n" + cancelReq);
 
-                OrderCancelResponse cancelResp = service.submitOrderCancelRequest(cancelReq);
+                //OrderCancelResponse cancelResp = service.submitOrderCancelRequest(cancelReq);
 
+                OrderCancelResponse cancelResp = service.cancelOrder(config.getClientId(), clientOrderID, resp.getOrderID());
+                
                 System.out.println("submitOrderCancelRequest:\n" + cancelResp);
 
                 Assertions.assertTrue(resp != null && cancelResp.isSuccess() && cancelResp.getOrderID() == cancelReq.getOrderID());
@@ -364,8 +366,10 @@ public class AlgoClientApiServiceTest
 
                 System.out.println("submitOrderCancelRequest:\n" + cancelReq);
 
-                OrderCancelResponse cancelResp = service.submitOrderCancelRequest(cancelReq);
+                //OrderCancelResponse cancelResp = service.submitOrderCancelRequest(cancelReq);
 
+                OrderCancelResponse cancelResp = service.cancelOrder(config.getClientId(), clientOrderID, resp.getOrderID());
+                
                 System.out.println("submitOrderCancelRequest:\n" + cancelResp);
 
                 Assertions.assertTrue(cancelReq != null && cancelResp.isSuccess() == false && cancelReq.getOrderID() == cancelReq.getOrderID());

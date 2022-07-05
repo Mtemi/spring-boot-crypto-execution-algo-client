@@ -71,6 +71,8 @@ catch (Throwable t)
 	<td rowspan="2"><b>Received<br>Time</b></td>
 	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
 	<td rowspan="2"><b>ClientID</b></td>
+	<td rowspan="2"><b>Client<br>OrderID</b></td>
+	
 	<td colspan="3" rowspan="1" align="center"><b>Instrument</b></td>
 	<td rowspan="2" align="center"><b>Primary<br>State</b></td>
 	<td rowspan="2" align="center"><b>Secondary<br>State</b></td>
@@ -175,7 +177,13 @@ for (int i=0; i<orders.size(); i++)
 		<%=order.getClientID() %>
 		</a>
 	</td>
-	
+
+	<td >
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<%=order.getClientOrderID() %>
+		</a>
+	</td>
+		
 	<td >
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
 		<%=order.getInstrumentID() %>

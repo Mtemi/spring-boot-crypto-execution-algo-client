@@ -55,16 +55,8 @@ try
 	if ("cancel".equals(act))
 	{
 	    // Cancel this order
-	    
-        OrderCancelRequest cancelReq = new OrderCancelRequest();
 
-        cancelReq.setClientID(order.getClientID());        
-        cancelReq.setOrderID(order.getOrderID());
-        cancelReq.setRequestTime(System.currentTimeMillis());
-
-        cancelReq.setSubAccount(request.getRemoteAddr());
-
-        OrderCancelResponse cancelResp = apiService.submitOrderCancelRequest(cancelReq);
+        OrderCancelResponse cancelResp = apiService.cancelOrder(order.getClientID(), order.getClientOrderID(), order.getOrderID());
 
         if (cancelResp.isSuccess())
         {

@@ -22,6 +22,8 @@ public class Order
 
     public String clientID;
 
+    public String clientOrderID;
+    
     public String account;
 
     public boolean active;

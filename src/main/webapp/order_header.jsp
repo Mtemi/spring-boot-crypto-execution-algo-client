@@ -64,6 +64,11 @@ catch (Throwable t)
         &nbsp;&nbsp;<a href="/order_detail.jsp?orderID=<%=order.getOrderID() %>" style="color: <%=theme.tab0Text %>;">Order Detail</a>&nbsp;&nbsp;       
     </td>
 
+    <td width=2></td>   
+    <td align="center" bgcolor=<%=spath.equals("/order_childs.jsp") ? theme.tabs : theme.tab %> >
+        <a href="/order_childs.jsp?orderID=<%=order.getOrderID() %>" style="color: <%=theme.tab0Text %>;">Child Orders (<%=order.getChildOrdersCount() %>)</a>       
+    </td>
+
                     
     <td width=2></td>   
     <td align="center" bgcolor=<%=spath.equals("/order_trades.jsp") ? theme.tabs : theme.tab %> >

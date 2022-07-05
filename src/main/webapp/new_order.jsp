@@ -36,7 +36,7 @@ pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - New Order Request";
 
 
 String strategyID = AlgoUtil.getParameter(request, "strategyID", "SOR");
-String instrumentID = AlgoUtil.getParameter(request, "instrumentID", null);
+String instrumentID = null;
 String act = AlgoUtil.getParameter(request, "act", null);
 
 boolean showAlgo = AlgoUtil.getParameterAsBoolean(request, "showAlgo", false);
@@ -62,6 +62,23 @@ try
     algoList = apiService.getAlgos();
     
     instrumentList = apiService.getInstruments();
+
+    // set default instrument to BTCBUSD
+    String instID_Default = (instrumentList.size() > 0 ? instrumentList.get(0).getInstrumentID() : "");
+    
+    for (Instrument item : instrumentList)
+    {
+        if (item.getInstrumentID().startsWith("BTC"))
+        {
+            instID_Default = item.getInstrumentID();
+            break;
+        }
+    }
+    
+    instrumentID = AlgoUtil.getParameter(request, "instrumentID", instID_Default);
+    
+    
+    
     
     algo = apiService.getAlgoByStrategyID(strategyID);
     
@@ -172,10 +189,10 @@ try
         
  		if ("submit".equals(act))
  		{
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
             formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
             
-            String clientOrderID = formatter.format(System.currentTimeMillis());
+            String clientOrderID = ""+System.currentTimeMillis();
 
             orderReq.setClientOrderID(clientOrderID);
             orderReq.setRequestTime(System.currentTimeMillis());
