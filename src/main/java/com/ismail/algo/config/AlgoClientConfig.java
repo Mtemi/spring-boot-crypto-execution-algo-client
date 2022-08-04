@@ -70,4 +70,7 @@ public class AlgoClientConfig
     
     private String webColorTheme;
     
+    // contact us url
+    
+    private String contactUsUrl;
 }

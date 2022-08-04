@@ -93,7 +93,10 @@ Source code for this project is available on my GitHub:
 <a href="https://github.com/ismailfer/spring-boot-crypto-execution-algo-client" target="_blank">
 https://github.com/ismailfer/spring-boot-crypto-execution-algo-client
 </a>
+<br>
 
+<h3>Contact us</h3>
+If you have any queries or questions; please <a href="/support.jsp">contact us here</a>
 </td>
 </tr>
 

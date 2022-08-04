@@ -39,7 +39,9 @@ PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 	</td>
 	
 	<td align="right" width="25%">
-
+		<a href="/support.jsp">
+		Support
+		</a>
 	</td>
 	
 

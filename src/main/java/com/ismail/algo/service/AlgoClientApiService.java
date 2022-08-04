@@ -23,6 +23,7 @@ import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoApiError;
 import com.ismail.algo.model.BusinessApiException;
 import com.ismail.algo.model.ChildOrder;
+import com.ismail.algo.model.ContactUsRequest;
 import com.ismail.algo.model.Instrument;
 import com.ismail.algo.model.NewOrderRequest;
 import com.ismail.algo.model.NewOrderResponse;
@@ -1144,5 +1145,73 @@ public class AlgoClientApiService
             throw new BusinessApiException(e);
         }
 
+    }
+    
+    
+    public void contactUs(ContactUsRequest contactRequest)
+    {
+        try
+        {
+            String url = config.getUrlPrefix();
+            url += config.getContactUsUrl();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(contactRequest);
+
+            log.info("contactUs() >>\n" + json);
+
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .uri(URI.create(url)) //
+                    .header("content-type", "application/json") //
+                    .header("accept", "application/json") //
+                    //.header(BinanceApiConstants.API_KEY_HEADER, apiKey)
+                    .POST(BodyPublishers.ofString(json)) //
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == HttpStatus.SC_OK)
+            {
+                String body = response.body();
+
+                log.info("contactUs() <<\n" + body);
+
+                if (body.contains("errorCode"))
+                {
+                    AlgoApiError err = mapper.readValue(body, AlgoApiError.class);
+
+                    throw new BusinessApiException(err);
+                }
+                else
+                {
+                    // all good
+                }
+            }
+            else
+            {
+                throw new BusinessApiException(response.statusCode(), "Unexpected Response");
+            }
+
+        }
+        catch (InterruptedException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(e);
+        }
+        catch (ConnectException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(AlgoConstants.ERROR_MSG_SERVER_UNREACHABLE);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(e);
+        }
     }
 }
