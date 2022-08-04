@@ -183,7 +183,8 @@ public class AlgoClientApiService
         {
             String url = config.getUrlPrefix();
             url += config.getInstrumentsUrl();
-
+            url += "?tob=true";
+            
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
@@ -247,6 +248,8 @@ public class AlgoClientApiService
             url += config.getInstrumentUrl();
 
             url += "?instrumentID=" + instrumentID;
+            url += "&tob=true";
+            url += "&tobm=true";
 
             log.info("Url: ", url);
 
@@ -309,7 +312,7 @@ public class AlgoClientApiService
         {
             String url = config.getUrlPrefix();
             url += config.getTopOfBookUrl();
-
+            
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();

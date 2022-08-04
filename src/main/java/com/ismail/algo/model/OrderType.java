@@ -10,7 +10,6 @@ public enum OrderType
 {
     Market('1'), //
     Limit('2'), //
-    Limit_or_better('7'), //
     Stop('3'), //
     Stop_Limit('4');
 

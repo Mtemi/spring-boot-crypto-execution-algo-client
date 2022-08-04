@@ -1,3 +1,4 @@
+<%@page import="com.ismail.algo.model.BusinessApiException"%>
 <%@page import="com.ismail.algo.model.TopOfBook"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="com.ismail.algo.model.Instrument"%>
@@ -22,6 +23,9 @@ AlgoClientConfig algoConfig = appServices.config;
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
 pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books (Multi Sources)";
+
+int intervalDef = 1000;
+int interval= AlgoUtil.getParameterAsInt(request, "interval", intervalDef);    
 
 String instID = "";
 
@@ -48,14 +52,9 @@ try
     
     if (AlgoUtil.isDefined(instID) && instruments != null)
     {
-        for (Instrument item : instruments)
-        {
-            if (item.getInstrumentID().equals(instID))
-            {
-                inst = item;
-                break;
-            }
-        }
+        inst = apiService.getInstrumentByInsID(instID);
+        if (inst == null)
+			throw new BusinessApiException("Invalid instrumentID " + instID);
     }
 }
 catch (Throwable t)
@@ -77,7 +76,7 @@ catch (Throwable t)
 <table width="1300" cellpadding=5 align="center">
 <form name="frm">
 <tr>
-	<td colspan=11 align="center">
+	<td colspan=13 align="center">
 
         <select name="instID" onChange="fnSubmit();" style="width: 200px; height: 30px; font-size: 20px;">
             <option value="">
@@ -103,6 +102,8 @@ catch (Throwable t)
 	<td colspan=1 rowspan=2 align="right"  width="100"><b>Ask Qty</b></td>
 
 	<td colspan=2 rowspan=1 align="center" width="120"><b>Spread</b></td>
+
+	<td colspan=1 rowspan=2 align="center" ><b>Ticks</b></td>
 
 	<td colspan=1 rowspan=2 align="center" ><b>Live</b></td>
 	
@@ -142,6 +143,8 @@ if (inst != null)
 	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
 	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
 
+	<td id="ticks_<%=elemID %>" valign="top" align="right"></td>
+
 	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;"></td>
 
 	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
@@ -177,6 +180,8 @@ for (TopOfBook tob : inst.topOfBooks)
 	<td id="spread_<%=elemID %>" valign="top" align="right"></td>
 	<td id="spreadBps_<%=elemID %>" valign="top" align="right"></td>
 
+	<td id="ticks_<%=elemID %>" valign="top" align="right"></td>
+
 	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;"></td>
 
 	<td id="utime_<%=elemID %>" valign="top" align="right"></td>
@@ -192,7 +197,7 @@ for (TopOfBook tob : inst.topOfBooks)
 <tr>
     <td id="cxtTime" colspan=5 align="left" style="color: <%=theme.bodyTextLight2 %>">    	
     </td>
-    <td id="msgStatus" colspan=7 align="right">
+    <td id="msgStatus" colspan=8 align="right">
     </td>
     
 </tr>
@@ -207,6 +212,10 @@ function fnSubmit()
 {
     var url = '<%=request.getServletPath() %>';
     url += '?instID=' + frm.instID.value;
+
+    <% if (interval != intervalDef) { %>
+    	url += '&interval=<%=interval %>';
+    <% } %>
     
     document.location = url;
 }
@@ -223,6 +232,7 @@ String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUr
 
 wsURL += "?multiSources=true";
 wsURL += "&instID=" + instID;
+wsURL += "&interval=" + interval;
 
 %>
 
@@ -276,6 +286,8 @@ socket.onmessage = function(event)
     var idSpread = document.querySelector('#spread_'+elemID);
     var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
 
+    var idTicks = document.querySelector('#ticks_'+elemID);
+
 	idBidQty.textContent = message.bidQtyStr;
 	idBidPx.textContent = message.bidStr;
 	idAskQty.textContent = message.askQtyStr;
@@ -283,6 +295,8 @@ socket.onmessage = function(event)
 	
 	idSpread.textContent = message.spreadStr;
 	idSpreadBps.textContent = message.spreadBpsStr;
+
+	idTicks.textContent = message.updateNumber;
 
 	idLive.textContent = message.live ? "Y" : "N";
 
