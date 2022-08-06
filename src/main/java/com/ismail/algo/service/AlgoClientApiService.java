@@ -25,13 +25,15 @@ import com.ismail.algo.model.BusinessApiException;
 import com.ismail.algo.model.ChildOrder;
 import com.ismail.algo.model.ContactUsRequest;
 import com.ismail.algo.model.Instrument;
+import com.ismail.algo.model.InstrumentsResult;
 import com.ismail.algo.model.NewOrderRequest;
 import com.ismail.algo.model.NewOrderResponse;
 import com.ismail.algo.model.Order;
 import com.ismail.algo.model.OrderBook;
-import com.ismail.algo.model.OrderCancelRequest;
+import com.ismail.algo.model.OrderBooksResult;
 import com.ismail.algo.model.OrderCancelResponse;
 import com.ismail.algo.model.TopOfBook;
+import com.ismail.algo.model.TopOfBooksResult;
 import com.ismail.algo.model.Trade;
 
 import lombok.RequiredArgsConstructor;
@@ -207,9 +209,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    Instrument[] items = mapper.readValue(body, Instrument[].class);
+                    InstrumentsResult result = mapper.readValue(body, InstrumentsResult.class);
 
-                    List<Instrument> list = Arrays.asList(items);
+                    List<Instrument> list = result.instruments;
 
                     return list;
                 }
@@ -335,9 +337,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    TopOfBook[] items = mapper.readValue(body, TopOfBook[].class);
+                    TopOfBooksResult result = mapper.readValue(body, TopOfBooksResult.class);
 
-                    List<TopOfBook> list = Arrays.asList(items);
+                    List<TopOfBook> list = result.topOfBooks;
 
                     return list;
                 }
@@ -459,9 +461,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    OrderBook[] items = mapper.readValue(body, OrderBook[].class);
+                    OrderBooksResult result = mapper.readValue(body, OrderBooksResult.class);
 
-                    List<OrderBook> list = Arrays.asList(items);
+                    List<OrderBook> list = result.orderBooks;
 
                     return list;
                 }

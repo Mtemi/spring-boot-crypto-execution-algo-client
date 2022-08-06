@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument
-{
+{    
     public String instrumentID;
 
     public String symbol;

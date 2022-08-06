@@ -123,7 +123,7 @@ for (int i=0; i<instruments.size(); i++)
 
 <%
 String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
-
+wsURL += "?formatted=true";
 //if (StringUtil.isDefined(instID))
 //	wsURL += "?instID=" + instID;
 %>
