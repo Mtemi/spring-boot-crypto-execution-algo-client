@@ -60,11 +60,10 @@ Note: If you have a suggestion for an algorithm; send it through and I will impl
 - Originally these algos were developed for Equities and Forex; and recently I added support for Cryptos
 
 #### Architecture
-- Spring Boot framework
+- Spring Boot framework for the execution client webpage
 - Rest API client for: Algorithm definitions, Instrument Data, Orders, Trades
 - WebSockets for: Top Of book feed, Order Book feed, and Order and Trade feed
-- Uses html and jsp to render the pages
-- Uses Ajax SockJS, and Stomp to handle websocket feeds 
+- Uses html5, javascript and jsp to render the pages
 - Uses Jackson RestAPI client
 - Reactive programming architecture
 - Vert.x pattern in implementing algo strategies
