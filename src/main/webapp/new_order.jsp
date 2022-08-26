@@ -238,7 +238,16 @@ catch (Throwable e)
 <input type="hidden" name="act" value="" />
 <input type="hidden" name="showAlgo" value="<%=showAlgo %>" />
 
-<tr bgcolor="<%=theme.rawHighlight %>" height="25">
+<input type="hidden" name="lastPx" value="" />
+<input type="hidden" name="bidPx" value="" />
+<input type="hidden" name="askPx" value="" />
+<input type="hidden" name="bidQty" value="" />
+<input type="hidden" name="askQty" value="" />
+<input type="hidden" name="qtyDefault" value="<%=qtyDefault %>" />
+<input type="hidden" name="displayQtyDefault" value="<%=displayQtyDefault %>" />
+
+
+<tr bgcolor="<%=theme.rawHighlight %>" height="25" >
 	<td align="center" colspan=3 onClick="frm.act.value='refresh'; frm.submit();">
 	<font size="+1">New Order Request</font>	
 	</td>
@@ -293,36 +302,55 @@ catch (Throwable e)
 	
 	<tr>
 		<td valign="top">
-			<select name="instrumentID" style="width: 200px;" onChange="frm.act.value='refresh'; frm.submit();">
+			<select id="instrumentID" name="instrumentID" style="width: 200px;" onChange="frm.act.value='refresh'; frm.submit();">
 			<% for (Instrument item : instrumentList) { %>
 				<option value="<%=item.getInstrumentID() %>" <%=item.getInstrumentID().equals(orderReq.getInstrumentID()) ? "selected" : "" %> ><%=item.getInstrumentID() %>
 			<% } %>
 			</select>
 		</td>
-		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getLast(), inst.getPriceDecimals()) %></td>
-		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getBidQty(), inst.getQuantityDecimals()) %></td>
-		<td valign="top" align="right" style="color: <%=theme.bid %>;">
+		
+		<td id="lastPx" valign="top" align="right">
+			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getLast(), inst.getPriceDecimals()) %>
+		</td>
+		
+		<td id="bidQty" valign="top" align="right">
+			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBidQty(), inst.getQuantityDecimals()) %>
+		</td>
+		
+		<td id="bidPx" valign="top" align="right" style="color: <%=theme.bid %>;">
 			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBid(), inst.getPriceDecimals()) %>
 		</td>
-		<td valign="top" align="right" style="color: <%=theme.ask %>;">
+		
+		<td id="askPx" valign="top" align="right" style="color: <%=theme.ask %>;">
 			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAsk(), inst.getPriceDecimals()) %>
 		</td>
-		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getAskQty(), inst.getQuantityDecimals()) %></td>
+		
+		<td id="askQty" valign="top" align="right">
+			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAskQty(), inst.getQuantityDecimals()) %>
+		</td>
 
-		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpread(), inst.getPriceDecimals()) %></td>
-		<td valign="top" align="right"><%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpreadBps(), 3) %></td>
+		<td id="spread" valign="top" align="right">
+			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpread(), inst.getPriceDecimals()) %>
+		</td>
+		
+		<td id="spreadBps" valign="top" align="right">
+			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getSpreadBps(), 3) %>
+		</td>
 
-		<td valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.bodyText : theme.negative %>;">
+		<td id="live" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.bodyText : theme.negative %>;">
 			<%=inst.getTopOfBook().isLive() ? "Y" : "N" %>
 		</td>
 	
-	    <td valign="top" align="right">
+	    <td id="utime" valign="top" align="right">
 	    	<%=timeFormatter.format(inst.getTopOfBook().getUpdateTime()) %>
 	    </td>
 	
 	</tr>	
-	
-	<tr><td colspan="8">&nbsp;</td></tr>
+
+	<!--  status fields -->
+	<tr>
+	    <td id="msgStatus" colspan=10 align="right">&nbsp;</td>
+	</tr>
 	
 	</table>
 
@@ -408,7 +436,7 @@ catch (Throwable e)
 				size="20" />
 
        	<input type="button" name="btnSetQty" value="?" 
-        		onClick="javascript: frm.quantity.value='<%=AlgoUtil.numericFormat(qtyDefault, inst.getQuantityDecimals()) %>';" />
+        		onClick="javascript: frm.quantity.value = frm.qtyDefault.value;" />
 				
 	</td>
 	<td>
@@ -426,7 +454,7 @@ catch (Throwable e)
 			size="20" />
 			
        	<input type="button" name="btnSetPx" value="?" 
-        		onClick="javascript: frm.price.value='<%=AlgoUtil.numericFormat(inst.getLastPrice() , inst.getPriceDecimals()) %>';" />
+        		onClick="javascript: frm.price.value=frm.lastPx.value;" />
 			
 	</td>
 	<td>
@@ -487,7 +515,7 @@ catch (Throwable e)
 	                style="text-align: right;">
 	                 
 	           	<input type="button" name="btnSetPx" value="?" 
-	           		onClick="javascript: frm.algo_<%=paramDef.getName() %>.value='<%=AlgoUtil.numericFormat(inst.getLastPrice(), inst.getPriceDecimals()) %>';" " />
+	           		onClick="javascript: frm.algo_<%=paramDef.getName() %>.value=frm.lastPx.value;" " />
 
         
         	<% } else if ("Double".equalsIgnoreCase(paramDef.getType()) && "Quantity".equalsIgnoreCase(paramDef.getTypeFormat())) { %>
@@ -500,7 +528,7 @@ catch (Throwable e)
 	            <% if ("DisplayQuantity".equals(paramDef.getName())) { %>
 	                 
 	           		<input type="button" name="btnSetPx" value="?" 
-	           			onClick="javascript: frm.algo_<%=paramDef.getName() %>.value='<%=AlgoUtil.numericFormat(displayQtyDefault , inst.getQuantityDecimals()) %>';" />
+	           			onClick="javascript: frm.algo_<%=paramDef.getName() %>.value=frm.displayQtyDefault.value;" />
 
 				<% } else { %>
 
@@ -746,6 +774,8 @@ catch (Throwable e)
 <% } %>
 
 
+
+
 <script type="text/javascript">
 function toggleShowAlgo(divID) 
 {
@@ -754,6 +784,118 @@ function toggleShowAlgo(divID)
 	frm.submit();
 }
 </script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<%
+String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
+wsURL += "?instID=" + instrumentID;
+wsURL += "&interval=100";
+wsURL += "&formatted=true";
+
+//if (StringUtil.isDefined(instID))
+//	wsURL += "?instID=" + instID;
+%>
+
+<script type="text/javascript" charset="utf-8">
+
+'use strict';
+
+var msgStatus = document.querySelector('#msgStatus');
+var cxtTime = document.querySelector('#cxtTime');
+
+var socket = new WebSocket('<%=wsURL %>');
+ 
+var instrumentSelectBox = document.getElementById('instrumentID');
+
+//console.log(instrumentSelectBox);
+
+var idLastPx = document.querySelector('#lastPx');
+var idBidQty = document.querySelector('#bidQty');
+var idBidPx = document.querySelector('#bidPx');
+var idAskQty = document.querySelector('#askQty');
+var idAskPx = document.querySelector('#askPx');
+var idLive = document.querySelector('#live');
+var idUtime = document.querySelector('#utime');
+var idSpread = document.querySelector('#spread');
+var idSpreadBps = document.querySelector('#spreadBps');
+
+
+socket.onopen = function(e) 
+{
+	msgStatus.textContent = '';
+    msgStatus.style.color = 'green';
+};
+
+socket.onclose = function(event) 
+{
+	if (event.wasClean) 
+	{
+	 	console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+	} 
+	else 
+	{
+  		console.log('[close] Connection died');
+	}
+	
+	msgStatus.textContent = 'Disconnected';
+	msgStatus.style.color = 'red';	  
+};
+	
+socket.onerror = function(error) 
+{
+	console.log('error received : ' + error.message);
+	
+    msgStatus.textContent = 'Unable to connect. Please refresh this page to try again!';
+    msgStatus.style.color = 'red';
+};
+
+
+socket.onmessage = function(event) 
+{
+	
+    var message = JSON.parse(event.data);
+
+    //console.log(event.data);
+    
+    // replace the dot; as it causes issues with JS
+    //var elemID = message.instrumentID.replace('.', '_');    
+    
+			
+    //instrumentSelectBox.value = message.instrumentID;
+    
+	idLastPx.textContent = message.lastStr;
+	idBidQty.textContent = message.bidQtyStr;
+	idBidPx.textContent = message.bidStr;
+	idAskQty.textContent = message.askQtyStr;
+	idAskPx.textContent = message.askStr;
+	
+	frm.lastPx.value = message.lastStr;
+	frm.bidQty.value = message.bidQtyStr;
+	frm.bidPx.value = message.bidStr;
+	frm.askQty.value = message.askQtyStr;
+	frm.askPx.value = message.askStr;
+	frm.qtyDefault.value = (message.bidQty + message.askQty) / 2.0;
+	frm.displayQtyDefault.value = (message.bidQty + message.askQty) / 2.0;
+	
+	
+	idSpread.textContent = message.spreadStr;
+	idSpreadBps.textContent = message.spreadBpsStr;
+
+	idLive.textContent = message.live ? "Y" : "N";
+	
+	idUtime.textContent = message.updateTimeDesc;
+	
+	
+	
+};
+
+</script>
+
+
 
 <jsp:include page="_footer.jsp" flush="true" />
 

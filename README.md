@@ -33,6 +33,8 @@ Variety of fully working algorithms are demonstrated in this project:
 
 [SNIPER strategy](docs/SNIPER-strategy.md)
 
+[STEALTH strategy](docs/STEALTH-strategy.md)
+
 [STOP strategy](docs/STOP-strategy.md)
 
 [TRAILING STOP strategy](docs/TRAILING_STOP-strategy.md)
