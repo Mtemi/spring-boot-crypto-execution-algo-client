@@ -17,33 +17,36 @@ It demonstrate how to connect to the microservices
 #### Algorithms
 Variety of fully working algorithms are demonstrated in this project:
 
-[TWAP strategy](docs/TWAP-strategy.md) 
-
-[VWAP strategy](docs/VWAP-strategy.md)
-
-[PARTICIPATE strategy](docs/PARTICIPATE-strategy.md)
-
 [ARRIVAL strategy](docs/ARRIVAL-strategy.md)
 
 [ARRIVAL_IOC strategy](docs/ARRIVAL_IOC-strategy.md)
 
-[PEG strategy](docs/PEG-strategy.md)
+[DARK strategy](docs/DARK-strategy.md)
+
+[DMA strategy](docs/DMA-strategy.md)
+
+[FIX strategy](docs/FIX-strategy.md)
 
 [ICEBERG strategy](docs/ICEBERG-strategy.md)
+
+[PEG strategy](docs/PEG-strategy.md)
+
+[PARTICIPATE strategy](docs/PARTICIPATE-strategy.md)
 
 [SNIPER strategy](docs/SNIPER-strategy.md)
 
 [STEALTH strategy](docs/STEALTH-strategy.md)
 
+[SOR strategy](docs/SOR-strategy.md)
+
 [STOP strategy](docs/STOP-strategy.md)
 
 [TRAILING STOP strategy](docs/TRAILING_STOP-strategy.md)
 
-[SOR strategy](docs/SOR-strategy.md)
+[TWAP strategy](docs/TWAP-strategy.md) 
 
-[DARK strategy](docs/DARK-strategy.md)
+[VWAP strategy](docs/VWAP-strategy.md)
 
-[DMA strategy](docs/DMA-strategy.md)
 
 
 The full list of algos, strategy detail, strategy parameters, strategy objective, and usage
