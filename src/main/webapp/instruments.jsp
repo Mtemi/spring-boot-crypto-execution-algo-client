@@ -20,7 +20,7 @@ AlgoClientConfig algoConfig = appServices.config;
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
-pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Instruments";
+pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books";
 
 List<Instrument> instruments = null;
 
@@ -32,6 +32,9 @@ catch (Throwable t)
 {    
 	pageInfo.setError(t);    
 }
+
+String WIDTH="80%";
+
 %>
 
 <jsp:include page="_header.jsp" flush="true" />
@@ -41,79 +44,165 @@ catch (Throwable t)
 
 <% if (instruments != null) { %>
 
-<table width="90%" cellpadding=5 align="center">
+<table width="<%=WIDTH %>" cellpadding=5 align="center">
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td colspan=1 rowspan=2><b>InstrumentID</b></td>
 	<td colspan=1 rowspan=2><b>Description</b></td>
 	<td colspan=1 rowspan=2><b>Type</b></td>
-	<td colspan=1 rowspan=2><b>Base<br>Asset</b></td>
-	<td colspan=1 rowspan=2><b>Quote<br>Asset</b></td>
-	<td colspan=1 rowspan=2><b>TimeZone</b></td>
-	<td colspan=1 rowspan=2 align="right"><b>Price<br>Tick Size</b></td>
-	<td colspan=1 rowspan=2 align="right"><b>Quantity<br>Tick Size</b></td>
-	<td colspan=1 rowspan=2 align="right"><b>Contract<br>Size</b></td>
-	<td colspan=1 rowspan=2 align="right"><b>Lot<br>Size</b></td>
-	
-	<td colspan=1 rowspan=2 align="right"><b>Last<br>Price</b></td>
+	<td colspan=1 rowspan=2 title="Market Data source"><b>Source</b></td>
 
-	<td colspan=5 rowspan=1 align="center"><b>Top Of Book</b></td>
+	<td colspan=1 rowspan=2 align="right"><b>Bid Qty</b></td>
+	<td colspan=1 rowspan=2 align="right"><b>Bid Px</b></td>
+	<td colspan=1 rowspan=2 align="right"><b>Ask Px</b></td>
+	<td colspan=1 rowspan=2 align="right"><b>Ask Qty</b></td>
+
+	<td colspan=2 rowspan=1 align="center"><b>Spread</b></td>
+	
+	<td colspan=1 rowspan=2 align="center"><b>Live</b></td>
+	<td colspan=1 rowspan=2 align="right"><b>Update Time</b></td>
 
 </tr>
 
 <tr bgcolor="<%=theme.headerBg %>">
 	
-	<td colspan=1 rowspan=1 align="right"><b>Bid Qty</b></td>
-	<td colspan=1 rowspan=1 align="right"><b>Bid Px</b></td>
-	<td colspan=1 rowspan=1 align="right"><b>Ask Px</b></td>
-	<td colspan=1 rowspan=1 align="right"><b>Ask Qty</b></td>
-	<td colspan=1 rowspan=1 align="center"><b>Live</b></td>
+	<td colspan=1 rowspan=1 align="right"><b>$</b></td>
+	<td colspan=1 rowspan=1 align="right"><b>Bps</b></td>
 
 </tr>
 
-<% for (int i=0; i<instruments.size(); i++) { 
+<% 
+for (int i=0; i<instruments.size(); i++) 
+{ 
     Instrument inst = instruments.get(i);
     
     String color = inst.getTopOfBook().isLive() ? theme.bodyText : theme.bodyTextLight2;
+    
+    // replace the dots; as it causes issues with JS
+    String elemID = inst.getInstrumentID().replaceAll("\\.", "_");
 %>
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
-	<td valign="top" style="color: <%=color %>;"><b><%=inst.getInstrumentID() %></b></td>
-	<td valign="top" style="color: <%=color %>;"><b><%=inst.getDesc() %></b></td>
-	<td valign="top" style="color: <%=color %>;"><%=inst.getInstType() %></td>
-	<td valign="top" style="color: <%=color %>;"><%=inst.getBaseAsset() %></td>
-	<td valign="top" style="color: <%=color %>;"><%=inst.getQuoteAsset() %></td>
-	<td valign="top" style="color: <%=color %>;"><%=inst.getTimezone() %></td>
-	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getTickSize(), inst.getPriceDecimals()) %></td>
-	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getTickSizeQty(), inst.getQuantityDecimals()) %></td>
-	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getContractSize(), 2) %></td>
-	<td valign="top" style="color: <%=color %>;" align="right"><%=AlgoUtil.numericFormat(inst.getLotSize(), 0) %></td>
-	<td valign="top" style="color: <%=color %>;" align="right">
-		<%=AlgoUtil.numericFormat(inst.getLastPrice(), inst.getPriceDecimals()) %>
-	</td>
+	<td id="symbol_<%=elemID %>" style="color: <%=color %>;" valign="top"><b><%=inst.getInstrumentID() %></b></td>
+	<td valign="top" style="color: <%=color %>;" ><b><%=inst.getDesc() %></b></td>
+	<td valign="top" style="color: <%=color %>;" ><%=inst.getInstType() %></td>
 
-	<td valign="top" style="color: <%=color %>;" align="right" align="right">
-		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBidQty(), inst.getQuantityDecimals()) %>
-	</td>
-	<td valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.bid : color %>;">
-		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getBid(), inst.getPriceDecimals()) %>
-	</td>
-	<td valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.ask : color %>;">
-		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAsk(), inst.getPriceDecimals()) %>
-	</td>
-	<td valign="top" align="right" style="color: <%=color %>;" >
-		<%=AlgoUtil.numericFormat(inst.getTopOfBook().getAskQty(), inst.getQuantityDecimals()) %>
-	</td>
+	<td id="mdSource_<%=elemID %>" style="color: <%=color %>;" valign="top"><%=inst.topOfBook.getMdSource() %></td>
 
-	<td valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : theme.negative %>;">
-		<%=inst.getTopOfBook().isLive() ? "Y" : "N" %>
-	</td>
+	<td id="bidQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.bid : color %>;"></td>
+	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.ask : color %>;"></td>
+	<td id="askQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+
+	<td id="spread_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+	<td id="spreadBps_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
+
+	<td id="live_<%=elemID %>" valign="top" align="center" style="color: <%=inst.getTopOfBook().isLive() ? theme.positive : color %>;" ></td>
+	<td id="utime_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
 
 </tr>	
 
 <% } %>
 
+<!--  status fields -->
+<tr>
+    <td id="cxtTime" colspan=5 align="left" style="color: <%=theme.bodyTextLight2 %>">
+    	
+    </td>
+    <td id="msgStatus" colspan=7 align="right"></td>
+    
+</tr>
+
 </table>
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<%
+String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
+wsURL += "?formatted=true";
+//if (StringUtil.isDefined(instID))
+//	wsURL += "?instID=" + instID;
+%>
+
+<script type="text/javascript" charset="utf-8">
+
+'use strict';
+
+var msgStatus = document.querySelector('#msgStatus');
+var cxtTime = document.querySelector('#cxtTime');
+
+var socket = new WebSocket('<%=wsURL %>');
+ 
+socket.onopen = function(e) 
+{
+	msgStatus.textContent = 'Connected';
+    msgStatus.style.color = 'green';
+};
+
+socket.onclose = function(event) 
+{
+	if (event.wasClean) 
+	{
+	 	console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+	} 
+	else 
+	{
+  		console.log('[close] Connection died');
+	}
+	
+	msgStatus.textContent = 'Disconnected';
+	msgStatus.style.color = 'red';	  
+};
+	
+socket.onerror = function(error) 
+{
+	console.log('error received : ' + error.message);
+	
+    msgStatus.textContent = 'Unable to connect. Please refresh this page to try again!';
+    msgStatus.style.color = 'red';
+};
+
+
+socket.onmessage = function(event) 
+{
+	
+    var message = JSON.parse(event.data);
+
+    //console.log(event.data);
+    
+    // replace the dot; as it causes issues with JS
+    var elemID = message.instrumentID.replace('.', '_');    
+    
+    var idBidQty = document.querySelector('#bidQty_'+elemID);
+    var idBidPx = document.querySelector('#bidPx_'+elemID);
+    var idAskQty = document.querySelector('#askQty_'+elemID);
+    var idAskPx = document.querySelector('#askPx_'+elemID);
+    var idLive = document.querySelector('#live_'+elemID);
+    var idUtime = document.querySelector('#utime_'+elemID);
+    var idSpread = document.querySelector('#spread_'+elemID);
+    var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
+			
+	idBidQty.textContent = message.bidQtyStr;
+	idBidPx.textContent = message.bidStr;
+	idAskQty.textContent = message.askQtyStr;
+	idAskPx.textContent = message.askStr;
+	
+	idSpread.textContent = message.spreadStr;
+	idSpreadBps.textContent = message.spreadBpsStr;
+
+	idLive.textContent = message.live ? "Y" : "N";
+	
+	idUtime.textContent = message.updateTimeDesc;
+};
+
+</script>
 
 <% } %>
 

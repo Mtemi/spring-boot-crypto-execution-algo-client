@@ -19,6 +19,8 @@ ColorThemeConfig theme = appServices.colorTheme;
 AlgoClientApiService apiService = appServices.apiService;
 AlgoClientConfig algoConfig = appServices.config;
 
+int[] INTERVAL_ARR = {0, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000}; 
+
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
@@ -61,6 +63,9 @@ catch (Throwable t)
 {    
 	pageInfo.setError(t);    
 }
+
+String WIDTH="80%";
+
 %>
 
 <jsp:include page="_header.jsp" flush="true" />
@@ -73,11 +78,12 @@ catch (Throwable t)
 <% if (instruments != null) { %>
 
 
-<table width="1300" cellpadding=5 align="center">
+<table width="<%=WIDTH %>" cellpadding=5 align="center">
 <form name="frm">
 <tr>
 	<td colspan=13 align="center">
-
+		
+		<b>Instrument:</b>
         <select name="instID" onChange="fnSubmit();" style="width: 200px; height: 30px; font-size: 20px;">
             <option value="">
             <% for (Instrument item : instruments) { %>
@@ -85,7 +91,14 @@ catch (Throwable t)
             <% } %>                 
         </select> 
             
-        	
+		<b>Update Interval: </b>
+        <select name="interval" onChange="fnSubmit();" style="width: 120px;">
+            <option value="">
+            <% for (int item : INTERVAL_ARR) { %>
+               <option value="<%=item %>" <%=item == interval ? "selected" : "" %>><%=item %> 
+            <% } %>                 
+        </select> 
+        ms          	
 	</td>
 </tr>
 </form>
@@ -213,9 +226,9 @@ function fnSubmit()
     var url = '<%=request.getServletPath() %>';
     url += '?instID=' + frm.instID.value;
 
-    <% if (interval != intervalDef) { %>
-    	url += '&interval=<%=interval %>';
-    <% } %>
+    if (frm.interval.value != <%=intervalDef %>)
+		url += '&interval=' + frm.interval.value;
+
     
     document.location = url;
 }
