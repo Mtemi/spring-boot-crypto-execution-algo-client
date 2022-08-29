@@ -264,11 +264,21 @@ for (int i=0; i<orders.size(); i++)
 
 	<!--  execution detail -->
 	<% if ("Rejected".equals(order.getStatus())) { %>
+	
 		<td align="left" colspan="6">
 			<a href="<%=orderDetailLink %>" style="color: <%=theme.negative %>;" target="_blank">
 			<%=order.getRejectReason() == null ? "" : order.getRejectReason() %>
 			</a>
 		</td>	
+
+	<% } else if (order.getQuantityFilled() == 0 && ("Expired".equals(order.getStatus()) || "Canceled".equals(order.getStatus()))) { %>
+	
+		<td align="left" colspan="6">
+			<a href="<%=orderDetailLink %>" style="color: <%=theme.negative %>;" target="_blank">
+			<%=order.getCompleteReason() == null ? "" : order.getCompleteReason() %>
+			</a>
+		</td>	
+				
 	<% } else { %>
 		<td align="right">
 			<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">

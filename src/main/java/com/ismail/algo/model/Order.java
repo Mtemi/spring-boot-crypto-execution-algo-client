@@ -31,7 +31,9 @@ public class Order
     public String status;
     
     public String rejectReason;
-    
+
+    public String completeReason;
+
 
     public long createdTime;
 

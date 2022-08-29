@@ -60,11 +60,11 @@ boolean selectedTab = false;
         <a href="instruments.jsp" style="color: <%=theme.tab0Text %>;">Instruments</a>     
     </td>
     
-    <% selectedTab = spath.contains("/topOfBooksMulti.jsp"); %>
+    <% selectedTab = spath.contains("/topOfBooks.jsp"); %>
     <td width=5></td>   
     <td class="tab_round<%=selectedTab ? "s" : "" %>" width=150 align="center" bgcolor="<%=selectedTab ? theme.tab0s : theme.tab0 %>"
     	title="View live top of book; from multiple sources">
-        <a href="topOfBooksMulti.jsp" style="color: <%=theme.tab0Text %>;">Top Of Book Multi</a>     
+        <a href="topOfBooks.jsp" style="color: <%=theme.tab0Text %>;">Top Of Books</a>     
     </td>
     
        <!-- 

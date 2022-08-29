@@ -254,10 +254,6 @@ catch (Throwable e)
 </tr>
 
 
-<!-- spacer -->
-<tr><td colspan=3>&nbsp;</td></tr>
-
-
 <!--  Instrument -->
 <!-- spacer -->
 <tr>
@@ -348,7 +344,7 @@ catch (Throwable e)
 	</tr>	
 
 	<!--  status fields -->
-	<tr>
+	<tr height="25">
 	    <td id="msgStatus" colspan=10 align="right">&nbsp;</td>
 	</tr>
 	
@@ -826,8 +822,8 @@ var idSpreadBps = document.querySelector('#spreadBps');
 
 socket.onopen = function(e) 
 {
-	msgStatus.textContent = '';
-    msgStatus.style.color = 'green';
+	//msgStatus.textContent = '';
+    //msgStatus.style.color = 'green';
 };
 
 socket.onclose = function(event) 
@@ -841,8 +837,8 @@ socket.onclose = function(event)
   		console.log('[close] Connection died');
 	}
 	
-	msgStatus.textContent = 'Disconnected';
-	msgStatus.style.color = 'red';	  
+	//msgStatus.textContent = 'Disconnected';
+	//msgStatus.style.color = 'red';	  
 };
 	
 socket.onerror = function(error) 
