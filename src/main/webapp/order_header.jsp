@@ -1,3 +1,5 @@
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="com.ismail.algo.model.TopOfBook"%>
 <%@page import="com.ismail.algo.model.AlgoParamValue"%>
@@ -31,7 +33,7 @@ Instrument inst = (Instrument) request.getAttribute("instrument");
 
 String spath = request.getServletPath();
 
-SimpleDateFormat formatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss.SSSSSS").withZone(ZoneId.systemDefault());
 
 try
 {
@@ -106,16 +108,21 @@ String secStatusColor = theme.getBgColorBySecondaryStatus(order.getStatus(), the
 String secStatusBgColor = theme.bodyBg;
 
 AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
-        
+       
+long orderAge = order.updatedTime - order.createdTime;
+long firstChildLatency = order.firstChildTime == 0L ?  0L : order.firstChildTime - order.createdTime;
+long firstChildAckLatency  = order.firstChildAcceptedTime == 0L ?  0L : order.firstChildAcceptedTime - order.createdTime;
+long firstTradeLatency = order.firstTradeTime == 0L ?  0L : order.firstTradeTime - order.createdTime;
+   
 %>
 
 <table width="100%" cellpadding=5 align="center">
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td rowspan="2"><b>OrderID</b></td>
-	<td rowspan="2"><b>Received<br>Time</b></td>
-	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
+	<td rowspan="2"><b>Order Time</b></td>
 	
+
 	<td rowspan="2"><b>ClientID</b></td>
 	<td colspan="3" rowspan="1" align="center"><b>Instrument</b></td>
 	
@@ -128,9 +135,14 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 	
 	<td colspan="6" rowspan="1" align="center"><b>Execution</b></td>
 
+	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
+
+	<td rowspan="1" colspan="3" align="right"><b>Latency Stats</b></td>
+		
 </tr>
 
 <tr bgcolor="<%=theme.headerBg %>">
+
 
 	<td align="left"><b>ID</b></td>
 	<td align="right"><b>Bid</b></td>
@@ -158,6 +170,11 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 	<td align="center"><b>Child<br>Orders</b></td>
 	<td align="center"><b>Trading<br>Venue</b></td>
 
+	<!--  Latency Stats -->
+	<td align="right"><b>First<br>Child</b></td>	
+	<td align="right"><b>First<br>Child Ack</b></td>
+	<td align="right"><b>First<br>Trade</b></td>
+
 </tr>
 
 
@@ -165,12 +182,10 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 <tr>
 
 	<td ><%=order.getOrderID() %></td>
-	<td ><%=formatter.format(order.getCreatedTime()) %></td>
+	<td ><%=AlgoUtil.formatNano(order.getCreatedTime(), formatter) %></td>
 	
-	<td align="right" title="<%=order.getUpdatedTime() - order.getCreatedTime() %> ms">
-		<%=AlgoUtil.getOrderAge(order.getUpdatedTime() - order.getCreatedTime()) %>
-	</td>
-		
+
+			
 	<td ><%=order.getClientID() %></td>
 	
 	<td ><%=order.getInstrumentID() %></td>
@@ -231,6 +246,37 @@ AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
 				
 	<% } %>
 
+	<td align="right" title="<%=AlgoUtil.numericFormat(orderAge / 1000.0, 3) %> Microseconds">
+		<% if (orderAge < 1000000L) { %>
+			<%=orderAge == 0 ? "" : AlgoUtil.numericFormat(orderAge / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(orderAge / 1000000L) %>
+		<% } %>
+	</td>
+
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstChildLatency / 1000.0, 3) %> Microseconds">
+		<% if (firstChildLatency < 1000000L) { %>
+			<%=firstChildLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstChildLatency / 1000000L) %>
+		<% } %>
+	</td>
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstChildAckLatency / 1000.0, 3) %> Microseconds">
+		<% if (firstChildAckLatency < 1000000L) { %>
+			<%=firstChildAckLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildAckLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstChildAckLatency / 1000000L) %>
+		<% } %>
+	</td>
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 3) %> Microseconds">
+		<% if (firstTradeLatency < 1000000L) { %>
+			<%=firstTradeLatency == 0 ? "" : AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstTradeLatency / 1000000L) %>
+		<% } %>
+	</td>
 </tr>	
 
 </table>

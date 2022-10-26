@@ -23,6 +23,7 @@ import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoApiError;
 import com.ismail.algo.model.BusinessApiException;
 import com.ismail.algo.model.ChildOrder;
+import com.ismail.algo.model.ChildOrdersResult;
 import com.ismail.algo.model.ContactUsRequest;
 import com.ismail.algo.model.Instrument;
 import com.ismail.algo.model.InstrumentsResult;
@@ -32,9 +33,11 @@ import com.ismail.algo.model.Order;
 import com.ismail.algo.model.OrderBook;
 import com.ismail.algo.model.OrderBooksResult;
 import com.ismail.algo.model.OrderCancelResponse;
+import com.ismail.algo.model.OrdersResult;
 import com.ismail.algo.model.TopOfBook;
 import com.ismail.algo.model.TopOfBooksResult;
 import com.ismail.algo.model.Trade;
+import com.ismail.algo.model.TradesResult;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -556,14 +559,16 @@ public class AlgoClientApiService
 
     }
 
-    public List<Order> getOrders(int maxRecords)
+    public OrdersResult getOrders(int pageNum, int pageSize)
     {
         try
         {
             String url = config.getUrlPrefix();
             url += config.getOrdersUrl();
 
-            url += "?maxRecs=" + maxRecords;
+            url += "?pageNum=" + pageNum;
+            url += "&pageSize=" + pageSize;
+            
 
             HttpClient client = HttpClient.newHttpClient();
 
@@ -585,11 +590,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    Order[] items = mapper.readValue(body, Order[].class);
+                    OrdersResult result = mapper.readValue(body, OrdersResult.class);
 
-                    List<Order> list = Arrays.asList(items);
-
-                    return list;
+                    return result;
                 }
             }
             else
@@ -679,7 +682,7 @@ public class AlgoClientApiService
         }
     }
 
-    public List<ChildOrder> getChildOrdersByParentOrderID(long orderID, int pageNum, int pageSize)
+    public ChildOrdersResult getChildOrdersByParentOrderID(long orderID, int pageNum, int pageSize)
     {
 
         try
@@ -713,11 +716,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    ChildOrder[] items = mapper.readValue(body, ChildOrder[].class);
+                    ChildOrdersResult result = mapper.readValue(body, ChildOrdersResult.class);
 
-                    List<ChildOrder> list = Arrays.asList(items);
-
-                    return list;
+                    return result;
                 }
             }
             else
@@ -808,7 +809,7 @@ public class AlgoClientApiService
 
     }
 
-    public List<Trade> getTradesByParentOrderID(long parentOrderID, int pageNum, int pageSize)
+    public TradesResult getTradesByParentOrderID(long parentOrderID, int pageNum, int pageSize)
     {
 
         try
@@ -841,11 +842,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    Trade[] items = mapper.readValue(body, Trade[].class);
+                    TradesResult result = mapper.readValue(body, TradesResult.class);
 
-                    List<Trade> list = Arrays.asList(items);
-
-                    return list;
+                    return result;
                 }
             }
             else

@@ -1,3 +1,6 @@
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="com.ismail.algo.model.OrdersResult"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="com.ismail.algo.model.TopOfBook"%>
 <%@page import="com.ismail.algo.model.AlgoParamValue"%>
@@ -29,25 +32,29 @@ PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
 pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Orders";
 
+int[] PAGE_SIZE_LIST = {10, 20, 50, 100, 200};
+int pageNum = AlgoUtil.getParameterAsInt(request, "pageNum", 1);
+int pageSize = AlgoUtil.getParameterAsInt(request, "pageSize", 20);
 
-int maxRecs = 100;
-
-List<Order> orders = null;
+OrdersResult result = null;
 
 Map<String,Instrument> instrumentsMap = null;
 
-SimpleDateFormat formatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss.SSSSSS").withZone(ZoneId.systemDefault());
+
+int orderCount = 0;
+int pageCount = 0;
 
 try
 {
-    orders = apiService.getOrders(maxRecs);
+    result = apiService.getOrders(pageNum, pageSize);
 
-	// sort by descending order
-    if (orders.size() > 1)
-        Collections.sort(orders, (o1, o2) -> -1 * Long.compare(o1.getCreatedTime(), o2.getCreatedTime()));
-
-	if (orders.size() > 0)
+    
+	if (result.recordCount > 0)
     	instrumentsMap = apiService.getInstrumentsMapByID();
+	
+	pageCount = result == null ? 1 : result.pageCount;
+	
 }
 catch (Throwable t)
 {    
@@ -60,16 +67,51 @@ catch (Throwable t)
 
 <br>
 
+
+
+<table width="100%" cellpadding=5 align="center">
+<form name="frm">
+<tr>
+	<td width="25%">
+	<b><%=result == null ? 0 : AlgoUtil.decimal(result.recordCount, 0) %></b> orders
+	</td>
+	
+	<td width="50%" align="center" style="font-size: 20px;">
+		<b>Orders</b>
+	</td>
+	
+	<td width="25%" align="right" title="Max Records to fetch">
+		<b>Page Number: </b>
+		<select name="pageNum" style="width: 100px;" onChange="fnReload();">
+		<% for (int item=1; item<=pageCount; item++) { %>
+			<option value="<%=item %>" <%=item == pageNum ? "selected" : "" %>><%=item %>
+		<% } %>
+		</select>
+		
+		
+		<b>Page Size: </b>
+		<select name="pageSize" style="width: 100px;" onChange="fnReload();">
+		<% for (int item : PAGE_SIZE_LIST) { %>
+			<option value="<%=item %>" <%=item == pageSize ? "selected" : "" %>><%=item %>
+		<% } %>
+		</select>
+	</td>
+</tr>
+</form>
+</table>
+
+
 <table width="100%" cellpadding=5 align="center">
 
 
-<% if (orders != null) { %>
+<% if (result != null) { %>
 
 
 <tr bgcolor="<%=theme.headerBg %>">
 	<td rowspan="2"><b>OrderID</b></td>
-	<td rowspan="2"><b>Received<br>Time</b></td>
-	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
+	<td rowspan="2"><b>Order Time</b></td>
+	
+
 	<td rowspan="2"><b>ClientID</b></td>
 	<td rowspan="2"><b>Client<br>OrderID</b></td>
 	
@@ -77,19 +119,22 @@ catch (Throwable t)
 	<td rowspan="2" align="center"><b>Primary<br>State</b></td>
 	<td rowspan="2" align="center"><b>Secondary<br>State</b></td>
 
-
 	<td colspan=2 rowspan="1" align="center"><b>Algo</b></td>
-
-
 
 	<td colspan="5" rowspan="1" align="center"><b>Order Request</b></td>
 	
 	<td colspan="6" rowspan="1" align="center"><b>Execution</b></td>
 
+	<td rowspan="2" colspan="1" align="right"><b>Order Age</b></td>
+	
+	<td rowspan="1" colspan="3" align="right"><b>Latency Stats</b></td>
+	
 </tr>
 
 <tr bgcolor="<%=theme.headerBg %>">
 
+
+		
 	<td align="left"><b>ID</b></td>
 	<td align="right"><b>Bid</b></td>
 	<td align="right"><b>Ask</b></td>
@@ -116,14 +161,19 @@ catch (Throwable t)
 	<td align="center"><b>Child<br>Orders</b></td>
 	<td align="center"><b>Trading<br>Venue</b></td>
 
+	<!--  Latency Stats -->
+	<td align="right"><b>First<br>Child</b></td>	
+	<td align="right"><b>First<br>Child Ack</b></td>
+	<td align="right"><b>First<br>Trade</b></td>
+		
 </tr>
 
 
 <% 
 int rowCount=0;
-for (int i=0; i<orders.size(); i++) 
+for (int i=0; i<result.pageRecordCount; i++) 
 { 
-    Order order = orders.get(i);
+    Order order = result.orders.get(i);
     
     // get instrument for this order
     Instrument inst = instrumentsMap.get(order.getInstrumentID());
@@ -151,6 +201,12 @@ for (int i=0; i<orders.size(); i++)
     AlgoParamValue execStyleParam = order.getParamByName("ExecStyle");
     
     String orderDetailLink = "order_detail.jsp?orderID=" + order.getOrderID();
+    
+    long orderAge = order.updatedTime - order.createdTime;
+    long firstChildLatency = order.firstChildTime == 0L ?  0L : order.firstChildTime - order.createdTime;
+    long firstChildAckLatency  = order.firstChildAcceptedTime == 0L ?  0L : order.firstChildAcceptedTime - order.createdTime;
+    long firstTradeLatency = order.firstTradeTime == 0L ?  0L : order.firstTradeTime - order.createdTime;
+        
 %>
 
 <tr bgcolor="<%=rowColorBg %>">
@@ -160,18 +216,15 @@ for (int i=0; i<orders.size(); i++)
 		<%=order.getOrderID() %>
 		</a>
 	</td>
+	
 	<td >
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
-		<%=formatter.format(order.getCreatedTime()) %>
+		<%=AlgoUtil.formatNano(order.getCreatedTime(), formatter) %>
 		</a>
 	</td>
 
-	<td align="right" title="<%=order.getUpdatedTime() - order.getCreatedTime() %> ms">
-		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
-		<%=AlgoUtil.getOrderAge(order.getUpdatedTime() - order.getCreatedTime()) %>
-		</a>
-	</td>
-			
+
+						
 	<td >
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
 		<%=order.getClientID() %>
@@ -313,6 +366,46 @@ for (int i=0; i<orders.size(); i++)
 		</td>		
 	<% } %>
 
+
+	<td align="right" title="<%=AlgoUtil.numericFormat(orderAge / 1000.0, 3) %> Microseconds">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<% if (orderAge < 1000000L) { %>
+			<%=orderAge == 0 ? "" : AlgoUtil.numericFormat(orderAge / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(orderAge / 1000000L) %>
+		<% } %>
+		</a>
+	</td>
+
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstChildLatency / 1000.0, 3) %> Microseconds">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<% if (firstChildLatency < 1000000L) { %>
+			<%=firstChildLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstChildLatency / 1000000L) %>
+		<% } %>
+		</a>
+	</td>
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstChildAckLatency / 1000.0, 3) %> Microseconds">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<% if (firstChildAckLatency < 1000000L) { %>
+			<%=firstChildAckLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildAckLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstChildAckLatency / 1000000L) %>
+		<% } %>
+		</a>
+	</td>
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 3) %> Microseconds">
+		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
+		<% if (firstTradeLatency < 1000000L) { %>
+			<%=firstTradeLatency == 0 ? "" : AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstTradeLatency / 1000000L) %>
+		<% } %>
+		</a>
+	</td>
 </tr>	
 
 <% } %>
@@ -321,6 +414,17 @@ for (int i=0; i<orders.size(); i++)
 
 <% } %>
 
+
+<script type="text/javascript">
+function fnReload()
+{
+	var url = '<%=request.getServletPath() %>';
+	url += '?pageSize=' + frm.pageSize.value;
+	url += '&pageNum=' + frm.pageNum.value;
+	
+	document.location = url;
+}
+</script>
 
 <jsp:include page="_footer.jsp" flush="true" />
 

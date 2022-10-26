@@ -1,3 +1,6 @@
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="com.ismail.algo.model.TradesResult"%>
 <%@page import="com.ismail.algo.model.Trade"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
 <%@page import="com.ismail.algo.model.TopOfBook"%>
@@ -40,10 +43,10 @@ pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Order Trades";
 Order order = null;
 Instrument inst = null;
 
-List<Trade> trades = null;
+TradesResult result = null;
 int pageCount = 1;
 
-SimpleDateFormat formatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss.SSSSSS").withZone(ZoneId.systemDefault());
 
 try
 {
@@ -51,16 +54,14 @@ try
 	
 	if (order != null)
 	{
-	    if (pageSize > 0)
-	    	pageCount = (int) Math.ceil((double) order.getTradesCount() / (double) pageSize);
-	    
 	    inst = apiService.getInstrumentByInsID(order.getInstrumentID());
 		   
 	    request.setAttribute("order", order);
 	    request.setAttribute("instrument", inst);
 		
-	    trades = apiService.getTradesByParentOrderID(orderID, pageNum, pageSize);
+	    result = apiService.getTradesByParentOrderID(orderID, pageNum, pageSize);
 	    
+	    pageCount = (result == null ? 1 : result.pageCount);
 	    
 	}
 }
@@ -95,7 +96,7 @@ if (order != null)
 <form name="frm">
 <tr>
 	<td width="30%">
-	<%=order.getTradesCount() %> trades
+	<b><%=AlgoUtil.decimal(order.getTradesCount(), 0) %></b> trades
 	</td>
 	
 	<td width="40%" align="center" style="font-size: 20px;">
@@ -138,18 +139,18 @@ if (order != null)
 </tr>
 
 <% 
-for (int i=0; trades != null && i<trades.size(); i++) 
+for (int i=0; result != null && i<result.pageRecordCount; i++) 
 {
-	Trade trade = trades.get(i);    
+	Trade trade = result.trades.get(i);    
 	
-	int rowNum = trades.size() - i;
+	int rowNum = result.pageRecordCount - i;
 	
 	double pctOfOrder = 100.0 * trade.getQuantity() / order.getQuantity();
 %>
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
 
-	<td ><%=formatter.format(trade.getTradeTime()) %></td>
+	<td ><%=AlgoUtil.formatNano(trade.getTradeTime(), formatter) %></td>
 	
 	<td align="center"><%=trade.getTradeID() %></td>
 

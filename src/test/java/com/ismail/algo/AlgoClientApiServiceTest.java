@@ -14,6 +14,7 @@ import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoExecStyle;
 import com.ismail.algo.model.AlgoParamValue;
 import com.ismail.algo.model.ChildOrder;
+import com.ismail.algo.model.ChildOrdersResult;
 import com.ismail.algo.model.Instrument;
 import com.ismail.algo.model.NewOrderRequest;
 import com.ismail.algo.model.NewOrderResponse;
@@ -23,9 +24,11 @@ import com.ismail.algo.model.OrderCancelRequest;
 import com.ismail.algo.model.OrderCancelResponse;
 import com.ismail.algo.model.OrderSide;
 import com.ismail.algo.model.OrderType;
+import com.ismail.algo.model.OrdersResult;
 import com.ismail.algo.model.TimeInForce;
 import com.ismail.algo.model.TopOfBook;
 import com.ismail.algo.model.Trade;
+import com.ismail.algo.model.TradesResult;
 import com.ismail.algo.service.AlgoClientApiService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -131,11 +134,14 @@ public class AlgoClientApiServiceTest
     @Test
     public void getOrders()
     {
-        List<Order> list = service.getOrders(config.ordersMaxRecordsDefault);
+        int pageNum = 1;
+        int pageSize = 50;
+        
+        OrdersResult ordersResult = service.getOrders(pageNum, pageSize);
 
-        Assertions.assertTrue(list != null && list.size() > 0);
+        Assertions.assertTrue(ordersResult.orders != null && ordersResult.orders.size() > 0);
 
-        System.out.println("getOrders:\n " + list);
+        System.out.println("getOrders:\n " + ordersResult.orders);
     }
 
     @Test
@@ -155,11 +161,11 @@ public class AlgoClientApiServiceTest
     {
         long parentOrderID = 1;
 
-        List<ChildOrder> list = service.getChildOrdersByParentOrderID(parentOrderID, 1, 50);
+        ChildOrdersResult result = service.getChildOrdersByParentOrderID(parentOrderID, 1, 50);
 
-        Assertions.assertTrue(list != null && list.size() > 0);
+        Assertions.assertTrue(result.childOrders != null && result.childOrders.size() > 0);
 
-        System.out.println("getChildOrdersByParentOrderID:\n " + list);
+        System.out.println("getChildOrdersByParentOrderID:\n " + result.childOrders);
     }
 
     @Test
@@ -179,11 +185,11 @@ public class AlgoClientApiServiceTest
     {
         long parentOrderID = 1;
 
-        List<Trade> list = service.getTradesByParentOrderID(parentOrderID, 1, 50);
+        TradesResult result = service.getTradesByParentOrderID(parentOrderID, 1, 50);
 
-        Assertions.assertTrue(list != null && list.size() > 0);
+        Assertions.assertTrue(result.trades != null && result.trades.size() > 0);
 
-        System.out.println("getTradesByParentOrderID:\n " + list);
+        System.out.println("getTradesByParentOrderID:\n " + result.trades);
     }
 
     @Test

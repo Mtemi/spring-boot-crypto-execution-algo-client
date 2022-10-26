@@ -13,6 +13,7 @@ It demonstrate how to connect to the microservices
 - View orders
 - Monitor the orders as the algo is working it
 - Cancel open orders
+- All timestamps are in epoch Nanos; and represented in a long format
 
 #### Algorithms
 Variety of fully working algorithms are demonstrated in this project:

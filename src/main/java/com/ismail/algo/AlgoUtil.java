@@ -3,6 +3,8 @@ package com.ismail.algo;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
@@ -240,6 +242,27 @@ public class AlgoUtil
         return formatter.format(value);
     }
 
+    public static final String decimal(double value, int decimals)
+    {
+        NumberFormat formatter = null;
+
+        if (decimals <= 0)
+        {
+            formatter = new DecimalFormat("#,##0");
+
+        }
+        else
+        {
+            StringBuilder sb = new StringBuilder("#,##0.");
+            for (int i = 0; i < decimals; i++)
+                sb.append('0');
+
+            formatter = new DecimalFormat(sb.toString());
+        }
+
+        return formatter.format(value);
+    }
+    
     public static SimpleDateFormat getFormatter(String pFormat)
     {
         return getFormatter(pFormat, null, false);
@@ -250,6 +273,7 @@ public class AlgoUtil
         return getFormatter(pFormat, pTimeZoneID, false);
     }
 
+    
     public static SimpleDateFormat getFormatter(String pFormat, String pTimeZoneID, boolean pLenient)
     {
         SimpleDateFormat dateParser = new SimpleDateFormat(pFormat);
@@ -264,6 +288,14 @@ public class AlgoUtil
         return dateParser;
     }
     
+    public static String formatNano(long pEpocNanos, DateTimeFormatter formatter)
+    {
+        Instant instant = Instant.ofEpochSecond(0, pEpocNanos);
+        String value = formatter.format(instant);
+        
+        return value;
+    }
+
     public static String getOrderAge(long pMillis)
     {
         String age = null;

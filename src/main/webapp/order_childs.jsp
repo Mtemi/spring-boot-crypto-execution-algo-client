@@ -1,3 +1,6 @@
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="com.ismail.algo.model.ChildOrdersResult"%>
 <%@page import="com.ismail.algo.model.ChildOrder"%>
 <%@page import="com.ismail.algo.model.Trade"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
@@ -41,26 +44,25 @@ pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Order Childs";
 Order order = null;
 Instrument inst = null;
 
-List<ChildOrder> childOrders = null;
+ChildOrdersResult result = null;
 int pageCount = 1;
 
-SimpleDateFormat formatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss.SSSSSS").withZone(ZoneId.systemDefault());
 
 try
 {
 	order = apiService.getOrderByOrderID(orderID);
 	
 	if (order != null)
-	{
-	    if (pageSize > 0)
-	    	pageCount = (int) Math.ceil((double) order.getChildOrdersCount() / (double) pageSize);
-	    
+	{    
 	    inst = apiService.getInstrumentByInsID(order.getInstrumentID());
 		   
 	    request.setAttribute("order", order);
 	    request.setAttribute("instrument", inst);
 		
-	    childOrders = apiService.getChildOrdersByParentOrderID(orderID, pageNum, pageSize);
+	    result = apiService.getChildOrdersByParentOrderID(orderID, pageNum, pageSize);
+	    
+	    pageCount = (result == null ? 1 : result.pageCount);
 	}
 }
 catch (Throwable t)
@@ -92,7 +94,7 @@ if (order != null)
 <form name="frm">
 <tr>
 	<td width="25%">
-	<%=order.getChildOrdersCount() %> child orders
+	<b><%=AlgoUtil.decimal(order.getChildOrdersCount(), 0) %></b> child orders
 	</td>
 	
 	<td width="50%" align="center" style="font-size: 20px;">
@@ -142,11 +144,11 @@ if (order != null)
 </tr>
 
 <% 
-for (int i=0; childOrders != null && i<childOrders.size(); i++) 
+for (int i=0; result != null && i<result.pageRecordCount; i++) 
 {
-    ChildOrder child = childOrders.get(i);    
+    ChildOrder child = result.childOrders.get(i);    
 	
-	int rowCount = childOrders.size() - i;
+	int rowCount = result.pageRecordCount - i;
 	
 	double pctOfOrder = 100.0 * child.getQuantity() / order.getQuantity();
 
@@ -159,14 +161,20 @@ for (int i=0; childOrders != null && i<childOrders.size(); i++)
     String secStatusColor = theme.getBgColorBySecondaryStatus(child.getStatus(), theme.bodyText);
     String secStatusBgColor = rowColorBg;
 
+    long orderAgeNanos = child.getUpdatedTime() - child.getCreatedTime();
+    
 %>
 
 <tr bgcolor="<%=rowColorBg %>">
 
-	<td ><%=formatter.format(child.getCreatedTime()) %></td>
+	<td ><%=AlgoUtil.formatNano(child.getCreatedTime(), formatter) %></td>
 
 	<td align="right">
-		<%=AlgoUtil.getOrderAge(child.getUpdatedTime() - child.getCreatedTime()) %>
+		<% if (orderAgeNanos < 1000000L) { %>
+			<%=orderAgeNanos == 0 ? "" : AlgoUtil.numericFormat(orderAgeNanos / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(orderAgeNanos / 1000000L) %>
+		<% } %>
 	</td>
 	
 	<td align="center"><%=child.getChildOrderID() %></td>

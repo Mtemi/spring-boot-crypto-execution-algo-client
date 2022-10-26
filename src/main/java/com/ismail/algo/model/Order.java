@@ -34,11 +34,21 @@ public class Order
 
     public String completeReason;
 
+    
 
     public long createdTime;
 
     public long updatedTime;
 
+
+    public long firstChildTime;
+
+    public long firstChildAcceptedTime;
+
+    public long firstTradeTime;
+
+    
+    
     public String side;
     
     public int orderType;
