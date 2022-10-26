@@ -1,4 +1,5 @@
 # Spring Boot Crypto Execution Algorithms Web Client
+
 This project is a web interface to the Execution Algorithms Microservices
 
 It demonstrate how to connect to the microservices
@@ -14,6 +15,8 @@ It demonstrate how to connect to the microservices
 - Monitor the orders as the algo is working it
 - Cancel open orders
 - All timestamps are in epoch Nanos; and represented in a long format
+- Ultra low latency execution; on average; an SOR or DMA order is executed (round trip) in 40 us
+
 
 #### Algorithms
 Variety of fully working algorithms are demonstrated in this project:
@@ -116,6 +119,17 @@ All the best!
 - Client Interface using Spring Boot with Rest API
 - Message Queues
 - MySQL Database
+
+#### Low Latency Architecture
+Ultra low latency execution; on average; an SOR or DMA order is executed (round trip) in 40 us
+
+##### Orders Grid
+![plot](./docs/images/orders-grid.png)
+
+##### Child Orders Grid
+![plot](./docs/images/child-orders-grid.png)
+
+
 
 ## Deployments
 - Docker
