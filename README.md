@@ -1,4 +1,4 @@
-# Spring Boot Crypto Execution Algorithms Web Client
+# Spring Boot Execution Algorithms Web Client
 
 This project is a web interface to the Execution Algorithms Microservices
 
@@ -15,7 +15,9 @@ It demonstrate how to connect to the microservices
 - Monitor the orders as the algo is working it
 - Cancel open orders
 - All timestamps are in epoch Nanos; and represented in a long format
-- Ultra low latency execution; on average; an SOR or DMA order is executed (round trip) in 40 us
+- Ultra low latency architecture with nanosecond accuracy
+  - Algo order like SOR, DMA, PEG, SNIPER, executes in 40 us on average (round trip)
+  - Exchange simulator matches an order in 4 us on average
 
 
 #### Algorithms
@@ -120,13 +122,19 @@ All the best!
 - Message Queues
 - MySQL Database
 
-#### Low Latency Architecture
+## Low Latency Architecture
 Ultra low latency execution; on average; an SOR or DMA order is executed (round trip) in 40 us
 
-##### Orders Grid
-![plot](./docs/images/orders-grid.png)
+### Orders Latency
 
-##### Child Orders Grid
+Average execution time for an Algo order: 40 micro second
+
+![plot](./docs/images/orders-latency.jpg)
+
+### Child Orders Latency
+
+Average execution time for a child order on the simulated exchange: 7 us
+
 ![plot](./docs/images/child-orders-grid.png)
 
 
