@@ -124,23 +124,39 @@ if (order != null)
 <table width="100%" cellpadding=5 align="center">
 
 <tr bgcolor="<%=theme.headerBg %>">
-	<td><b>Order Time</b></td>
-	<td align="right"><b>Order<br>Age</b></td>	
-	<td align="center"><b>Child<br>OrderID</b></td>
-	<td><b>Primary<br>Status</b></td>
-	<td><b>Secondary<br>Status</b></td>	
-	<td><b>Instrument</b></td>
-	<td><b>Side</b></td>	
-	<td><b>Order Type</b></td>
-	<td><b>Time in Force</b></td>
-	<td align="right"><b>Quantity</b></td>
-	<td align="right"><b>Price</b></td>
-	<td align="right"><b>%<br>of Order</b></td>
+	<td rowspan="2" align="center"><b>Child<br>OrderID</b></td>
+	
+	<td rowspan="2" ><b>Order Time</b></td>
+	
 
-	<td align="right"><b>Quantity<br>Filled</b></td>
-	<td align="right"><b>Average<br>Price</b></td>
+	<td rowspan="2" ><b>Primary<br>Status</b></td>
+	<td rowspan="2" ><b>Secondary<br>Status</b></td>	
+	<td rowspan="2" ><b>Instrument</b></td>
+	<td rowspan="2" ><b>Side</b></td>	
+	<td rowspan="2" ><b>Order Type</b></td>
+	<td rowspan="2" ><b>Time in Force</b></td>
+	<td rowspan="2" align="right"><b>Quantity</b></td>
+	<td rowspan="2" align="right"><b>Price</b></td>
+	<td rowspan="2" align="right"><b>%<br>of Order</b></td>
 
-	<td align="right"><b>Trading Venue</b></td>
+	<td rowspan="2" align="right"><b>Quantity<br>Filled</b></td>
+	<td rowspan="2" align="right"><b>Average<br>Price</b></td>
+
+	<td rowspan="2" align="right"><b>Trading Venue</b></td>
+
+	<td rowspan="2" align="right"><b>Order<br>Age</b></td>
+	<td rowspan="1" colspan="3" align="right"><b>Latency Stats</b></td>
+	
+</tr>
+
+<tr bgcolor="<%=theme.headerBg %>">
+
+
+
+	<!--  Latency Stats -->
+	<td align="right"><b>Ack</b></td>	
+	<td align="right"><b>First<br>Trade</b></td>
+		
 </tr>
 
 <% 
@@ -161,23 +177,22 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
     String secStatusColor = theme.getBgColorBySecondaryStatus(child.getStatus(), theme.bodyText);
     String secStatusBgColor = rowColorBg;
 
-    long orderAgeNanos = child.getUpdatedTime() - child.getCreatedTime();
+    long orderAgeNanos = child.updatedTime - child.createdTime;
+
+    long ackLatency = child.acceptedTime == 0L ?  0L : child.acceptedTime - child.createdTime;
+    long firstTradeLatency = child.firstTradeTime == 0L ?  0L : child.firstTradeTime - child.createdTime;
     
+    //System.out.println(child);
 %>
 
 <tr bgcolor="<%=rowColorBg %>">
 
+	<td align="center"><%=child.getChildOrderID() %></td>
+
 	<td ><%=AlgoUtil.formatNano(child.getCreatedTime(), formatter) %></td>
 
-	<td align="right">
-		<% if (orderAgeNanos < 1000000L) { %>
-			<%=orderAgeNanos == 0 ? "" : AlgoUtil.numericFormat(orderAgeNanos / 1000.0, 0) + "us" %>
-		<% } else { %>
-			<%=AlgoUtil.getOrderAge(orderAgeNanos / 1000000L) %>
-		<% } %>
-	</td>
+
 	
-	<td align="center"><%=child.getChildOrderID() %></td>
 
 	<td align="center" bgcolor="<%=primaryStatusBgColor %>" style="color: <%=primaryStatusColor %>;">	
 		<%=child.isActive() ? "Active" : "Closed" %>
@@ -211,6 +226,30 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 
 	<td align="right"><%=child.getLastTradeVenue() == null ? "" : child.getLastTradeVenue() %></td>
 
+	<td align="right">
+		<% if (orderAgeNanos < 1000000L) { %>
+			<%=orderAgeNanos == 0 ? "" : AlgoUtil.numericFormat(orderAgeNanos / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(orderAgeNanos / 1000000L) %>
+		<% } %>
+	</td>
+	
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(ackLatency / 1000.0, 3) %> Microseconds">
+		<% if (ackLatency < 1000000L) { %>
+			<%=ackLatency == 0 ? "" : AlgoUtil.numericFormat(ackLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(ackLatency / 1000000L) %>
+		<% } %>
+	</td>
+	
+	<td align="right" title="<%=AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 3) %> Microseconds">
+		<% if (firstTradeLatency < 1000000L) { %>
+			<%=firstTradeLatency == 0 ? "" : AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 0) + "us" %>
+		<% } else { %>
+			<%=AlgoUtil.getOrderAge(firstTradeLatency / 1000000L) %>
+		<% } %>
+	</td>
 </tr>	
 
 <% } %>

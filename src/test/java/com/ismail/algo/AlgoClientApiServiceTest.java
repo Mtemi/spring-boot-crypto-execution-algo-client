@@ -229,7 +229,7 @@ public class AlgoClientApiServiceTest
 
             req.setClientID(config.getClientId());
 
-            req.setClientOrderID(clientOrderID);
+            req.setClOrdID(clientOrderID);
 
             req.setRequestTime(System.currentTimeMillis());
 
@@ -275,7 +275,7 @@ public class AlgoClientApiServiceTest
 
             req.setClientID(config.getClientId());
 
-            req.setClientOrderID(clientOrderID);
+            req.setClOrdID(clientOrderID);
 
             req.setRequestTime(System.currentTimeMillis());
 
@@ -334,7 +334,7 @@ public class AlgoClientApiServiceTest
 
             req.setClientID(config.getClientId());
 
-            req.setClientOrderID(clientOrderID);
+            req.setClOrdID(clientOrderID);
 
             req.setRequestTime(System.currentTimeMillis());
 

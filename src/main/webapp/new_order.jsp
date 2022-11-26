@@ -194,7 +194,8 @@ try
             
             String clientOrderID = ""+System.currentTimeMillis();
 
-            orderReq.setClientOrderID(clientOrderID);
+            orderReq.setClOrdID(clientOrderID);
+            
             orderReq.setRequestTime(System.currentTimeMillis());
 
             orderReq.setSubAccount(request.getRemoteAddr());

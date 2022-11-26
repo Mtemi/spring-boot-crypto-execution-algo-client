@@ -53,4 +53,9 @@ public class ChildOrder
     
     public String lastTradeVenue;
     
+    // latency stats
+    
+    public long acceptedTime;
+    
+    public long firstTradeTime;
 }

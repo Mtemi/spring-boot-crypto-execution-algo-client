@@ -3,6 +3,7 @@ package com.ismail.algo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +19,13 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 public class AlgoParamValue
 {
+    @JsonProperty("n")
     public String name;
     
+    @JsonProperty("v")
     public String value;
     
+    @JsonProperty("d")
     public String valueDesc;
         
 
