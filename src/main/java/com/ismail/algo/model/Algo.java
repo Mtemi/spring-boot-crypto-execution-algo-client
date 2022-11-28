@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Algo
+public class Algo extends ResponseMsg
 {
     private String strategyID = null;
     
@@ -23,6 +23,12 @@ public class Algo
     private String desc = null;
     
     private List<AlgoParamDef> params = null;
+    
+    public Algo()
+    {
+        super(ApiMsgType.AlgoDefinition);
+    }
+    
     
     public int getParamsCount()
     {

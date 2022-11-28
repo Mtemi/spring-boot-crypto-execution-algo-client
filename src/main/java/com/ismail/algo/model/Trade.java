@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Trade
+public class Trade extends ResponseMsg
 {
     public long tradeID;
 
@@ -33,4 +33,8 @@ public class Trade
 
     public String exchTradeID;
 
+    public Trade()
+    {
+        super(ApiMsgType.Trade);
+    }
 }

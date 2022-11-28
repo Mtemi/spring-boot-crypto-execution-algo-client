@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Order
+public class Order extends ResponseMsg
 {
     public long orderID;
     
@@ -85,6 +85,11 @@ public class Order
 
     public TopOfBook topOfBook;
     
+    
+    public Order()
+    {
+        super(ApiMsgType.Order);
+    }
     
     @JsonIgnore
     public AlgoParamValue getParamByName(String pParamName)

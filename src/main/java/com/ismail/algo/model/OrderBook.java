@@ -10,7 +10,7 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderBook
+public class OrderBook extends ResponseMsg
 {    
     private String instrumentID = null;
         
@@ -38,4 +38,8 @@ public class OrderBook
 
     private List<OrderBookEntry> asks = null;
 
+    public OrderBook()
+    {
+        super(ApiMsgType.OrderBook);
+    }
 }

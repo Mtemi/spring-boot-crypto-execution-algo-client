@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class OrderCancelResponse
+public class OrderCancelResponse extends ResponseMsg
 {  
     public String clientID;
     
@@ -26,4 +26,8 @@ public class OrderCancelResponse
     
     public long responseTime;
 
+    public OrderCancelResponse()
+    {
+        super(ApiMsgType.OrderCancelResponse);
+    }
 }

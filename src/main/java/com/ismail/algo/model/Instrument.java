@@ -10,7 +10,7 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Instrument
+public class Instrument extends ResponseMsg
 {    
     public String instrumentID;
 
@@ -57,4 +57,9 @@ public class Instrument
     public TopOfBook topOfBook;
     
     public List<TopOfBook> topOfBooks;
+    
+    public Instrument()
+    {
+        super(ApiMsgType.Instrument);
+    }
 }

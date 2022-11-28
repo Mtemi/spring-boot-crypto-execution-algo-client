@@ -21,7 +21,7 @@ public class BusinessApiException extends RuntimeException
  
     public BusinessApiException(AlgoApiError apiError)
     {
-        super(apiError.getErrorCode() + "-" + apiError.getErrorMsg());
+        super(apiError.errorCode + "-" + apiError.errorMessage);
         
         this.apiError = apiError;
     }

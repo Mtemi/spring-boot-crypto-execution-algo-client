@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class NewOrderRequest
+public class NewOrderRequest extends RequestMsg
 {
     @JsonProperty(FIXTags.TAGSymbol)
     public String instrumentID;
@@ -72,6 +72,12 @@ public class NewOrderRequest
 
     @JsonProperty(FIXTags.TAGTargetStrategyParameters)
     public List<AlgoParamValue> algoParams;
+    
+    
+    public NewOrderRequest()
+    {
+        super(ApiMsgType.OrderSingleRequest);
+    }
     
     public void addAlgoParam(AlgoParamValue algoParam)
     {

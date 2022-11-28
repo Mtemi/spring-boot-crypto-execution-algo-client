@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class OrdersResult
+public class OrdersResult extends ResponseMsg
 {
     public int pageNumber;
     
@@ -26,5 +26,9 @@ public class OrdersResult
     public int pageRecordCount;
     
     public List<Order> orders;
-        
+     
+    public OrdersResult()
+    {
+        super(ApiMsgType.OrderResult);
+    }
 }

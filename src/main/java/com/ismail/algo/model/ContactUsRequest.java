@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class ContactUsRequest
+public class ContactUsRequest extends RequestMsg
 {
     public String name;
 
@@ -27,4 +27,8 @@ public class ContactUsRequest
 
     public String appURL;
 
+    public ContactUsRequest()
+    {
+        super(ApiMsgType.ContactUsRequest);
+    }
 }

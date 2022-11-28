@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class ChildOrder
+public class ChildOrder extends ResponseMsg
 {
     public long childOrderID;
 
@@ -58,4 +58,9 @@ public class ChildOrder
     public long acceptedTime;
     
     public long firstTradeTime;
+    
+    public ChildOrder()
+    {
+        super(ApiMsgType.ChildOrder);
+    }
 }

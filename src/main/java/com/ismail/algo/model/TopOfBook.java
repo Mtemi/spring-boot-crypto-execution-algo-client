@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TopOfBook
+public class TopOfBook extends ResponseMsg
 {    
     public String instrumentID = null;
         
@@ -42,5 +42,9 @@ public class TopOfBook
     
     public boolean live = false;
     
+    public TopOfBook()
+    {
+        super(ApiMsgType.TopOfBook);
+    }
 
 }

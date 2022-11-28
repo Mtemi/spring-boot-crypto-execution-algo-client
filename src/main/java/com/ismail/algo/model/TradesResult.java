@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class TradesResult
+public class TradesResult extends ResponseMsg
 {
     public int pageNumber;
     
@@ -27,4 +27,8 @@ public class TradesResult
     
     public List<Trade> trades;
         
+    public TradesResult()
+    {
+        super(ApiMsgType.TradeResult);
+    }
 }

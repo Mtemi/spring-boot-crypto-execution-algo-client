@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class OrderCancelRequest
+public class OrderCancelRequest extends RequestMsg
 {
     public String clientID;
 
@@ -24,5 +24,10 @@ public class OrderCancelRequest
     public long orderID;
 
     public long requestTime;
+    
+    public OrderCancelRequest()
+    {
+        super(ApiMsgType.OrderCancelRequest);
+    }
 
 }

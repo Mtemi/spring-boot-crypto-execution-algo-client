@@ -10,10 +10,14 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderBooksResult
+public class OrderBooksResult extends ResponseMsg
 {    
     public int recordsCount;
         
     public List<OrderBook> orderBooks;    
 
+    public OrderBooksResult()
+    {
+        super(ApiMsgType.OrderBookResults);
+    }
 }

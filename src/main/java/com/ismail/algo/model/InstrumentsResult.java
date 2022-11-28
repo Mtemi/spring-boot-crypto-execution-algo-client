@@ -10,9 +10,14 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InstrumentsResult
+public class InstrumentsResult extends ResponseMsg
 {    
     public int recordsCount;
     
     public List<Instrument> instruments;
+    
+    public InstrumentsResult()
+    {
+        super(ApiMsgType.InstrumentResults);
+    }
 }
