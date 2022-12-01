@@ -1,3 +1,4 @@
+<%@page import="com.ismail.algo.DateUtil"%>
 <%@page import="com.ismail.algo.model.OrderCancelResponse"%>
 <%@page import="com.ismail.algo.model.OrderCancelRequest"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
@@ -38,7 +39,7 @@ pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Order Detail ";
 Order order = null;
 Instrument inst = null;
 
-SimpleDateFormat formatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+SimpleDateFormat formatter = DateUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
 
 try
 {

@@ -3,7 +3,6 @@ package com.ismail.algo;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Generic EnumInteger that will load the field names and their values automatically
@@ -66,9 +65,9 @@ public abstract class EnumIntGeneric implements IEnumInteger
         {
             Field[] declaredFields = clazz.getDeclaredFields();
 
-            List<Field> staticFields = new ArrayList<>();
+            ArrayList<Field> staticFields = new ArrayList<>();
 
-            ArrayList<Integer> values = new ArrayList(20);
+            ArrayList<Integer> values = new ArrayList<>(20);
             ArrayList<String> names = new ArrayList<>();
 
             for (Field field : declaredFields)

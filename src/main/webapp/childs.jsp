@@ -34,16 +34,14 @@ int[] PAGE_SIZE_LIST = {10, 20, 50, 100, 200};
 int pageNum = AlgoUtil.getParameterAsInt(request, "pageNum", 1);
 int pageSize = AlgoUtil.getParameterAsInt(request, "pageSize", 20);
 
-long orderID = AlgoUtil.getParameterAsLong(request, "orderID");
-
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
-pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Order Childs";
+pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Child Orders";
 
 
-Order order = null;
-Instrument inst = null;
+Map<String,Instrument> instrumentsMap = null;
+
 
 ChildOrdersResult result = null;
 int pageCount = 1;
@@ -52,19 +50,12 @@ DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss.SSS
 
 try
 {
-	order = apiService.getOrderByOrderID(orderID);
+    result = apiService.getChildOrders(pageNum, pageSize);
 	
-	if (order != null)
-	{    
-	    inst = apiService.getInstrumentByInsID(order.getInstrumentID());
-		   
-	    request.setAttribute("order", order);
-	    request.setAttribute("instrument", inst);
-		
-	    result = apiService.getChildOrdersByParentOrderID(orderID, pageNum, pageSize);
-	    
-	    pageCount = (result == null ? 1 : result.pageCount);
-	}
+    if (result.recordCount > 0)
+    	instrumentsMap = apiService.getInstrumentsMapByID();
+		    
+    pageCount = (result == null ? 1 : result.pageCount);
 }
 catch (Throwable t)
 {    
@@ -78,16 +69,10 @@ catch (Throwable t)
 <jsp:include page="_navigation.jsp" flush="true" />
 
 <% 
-if (order != null) 
-{    
-    TopOfBook tob = inst.getTopOfBook();
-    
-    double doneQtyPct = order.getQuantity() > 0.0 ? (100.0 * order.getQuantityFilled() / order.getQuantity()) : 0.0;
-        
+if (result != null) 
+{            
         
 %>
-
-<jsp:include page="order_header.jsp" flush="true" />
 
 <br>
 
@@ -95,7 +80,7 @@ if (order != null)
 <form name="frm">
 <tr>
 	<td width="25%">
-	<b><%=AlgoUtil.decimal(order.getChildOrdersCount(), 0) %></b> child orders
+	<b><%=AlgoUtil.decimal(result.recordCount , 0) %></b> child orders
 	</td>
 	
 	<td width="50%" align="center" style="font-size: 20px;">
@@ -125,6 +110,9 @@ if (order != null)
 <table width="100%" cellpadding=5 align="center">
 
 <tr bgcolor="<%=theme.headerBg %>">
+
+	<td rowspan="2" align="center"><b>Parent<br>OrderID</b></td>
+
 	<td rowspan="2" align="center"><b>Child<br>OrderID</b></td>
 	
 	<td rowspan="2" ><b>Order Time</b></td>
@@ -138,7 +126,6 @@ if (order != null)
 	<td rowspan="2" ><b>Time in Force</b></td>
 	<td rowspan="2" align="right"><b>Quantity</b></td>
 	<td rowspan="2" align="right"><b>Price</b></td>
-	<td rowspan="2" align="right"><b>%<br>of Order</b></td>
 
 	<td rowspan="2" align="right"><b>Quantity<br>Filled</b></td>
 	<td rowspan="2" align="right"><b>Average<br>Price</b></td>
@@ -165,10 +152,10 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 {
     ChildOrder child = result.childOrders.get(i);    
 	
+    Instrument inst = instrumentsMap.get(child.getInstrumentID());
+
 	int rowCount = result.pageRecordCount - i;
 	
-	double pctOfOrder = 100.0 * child.getQuantity() / order.getQuantity();
-
     String rowColorBg = (rowCount % 2 == 0) ? theme.rawHighlight : theme.raw;
     
     //String primaryStatusBgColor = AlgoUtil.getBgColorByPrimaryStatus(child.isActive());
@@ -187,6 +174,12 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 %>
 
 <tr bgcolor="<%=rowColorBg %>">
+
+	<td align="center">
+		<a href="order_detail.jsp?orderID=<%=child.getParentOrderID() %>" style="color: <%=theme.bodyText %>;" target="_blank">		
+		<%=child.getParentOrderID() %>
+		</a>
+	</td>
 
 	<td align="center"><%=child.getChildOrderID() %></td>
 
@@ -219,7 +212,6 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 	<td align="right"><%=AlgoUtil.numericFormat(child.getQuantity(), inst.getQuantityDecimals()) %></td>
 	<td align="right"><%=child.getPrice() == 0.0 ? "" : AlgoUtil.numericFormat(child.getPrice(), inst.getPriceDecimals()) %></td>
 
-	<td align="right"><%=AlgoUtil.numericFormat(pctOfOrder, 2) %></td>
 
 	<td align="right"><%=child.getQuantityFilled() == 0.0 ? "" : AlgoUtil.numericFormat(child.getQuantityFilled(), inst.getQuantityDecimals()) %></td>
 	<td align="right"><%=child.getQuantityFilled() == 0.0 ? "" : AlgoUtil.numericFormat(child.getAveragePrice(), inst.getPriceDecimals()) %></td>
@@ -263,8 +255,8 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 <script type="text/javascript">
 function fnReload()
 {
-	var url = '<%=request.getServletPath() %>?orderID=<%=orderID %>';
-	url += '&pageSize=' + frm.pageSize.value;
+	var url = '<%=request.getServletPath() %>';
+	url += '?pageSize=' + frm.pageSize.value;
 	url += '&pageNum=' + frm.pageNum.value;
 	
 	document.location = url;

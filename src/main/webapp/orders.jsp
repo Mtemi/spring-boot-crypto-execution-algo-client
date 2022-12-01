@@ -1,3 +1,4 @@
+<%@page import="com.ismail.algo.DateUtil"%>
 <%@page import="java.time.ZoneId"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="com.ismail.algo.model.OrdersResult"%>
@@ -202,7 +203,8 @@ for (int i=0; i<result.pageRecordCount; i++)
     
     String orderDetailLink = "order_detail.jsp?orderID=" + order.getOrderID();
     
-    long orderAge = order.updatedTime - order.createdTime;
+    long orderAgeNanos =  order.active ? (DateUtil.currentTimeNanos() - order.createdTime) : (order.updatedTime - order.createdTime);
+
     long firstChildLatency = order.firstChildTime == 0L ?  0L : order.firstChildTime - order.createdTime;
     long firstChildAckLatency  = order.firstChildAcceptedTime == 0L ?  0L : order.firstChildAcceptedTime - order.createdTime;
     long firstTradeLatency = order.firstTradeTime == 0L ?  0L : order.firstTradeTime - order.createdTime;
@@ -219,7 +221,7 @@ for (int i=0; i<result.pageRecordCount; i++)
 	
 	<td >
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
-		<%=AlgoUtil.formatNano(order.getCreatedTime(), formatter) %>
+		<%=DateUtil.formatNano(order.getCreatedTime(), formatter) %>
 		</a>
 	</td>
 
@@ -367,12 +369,12 @@ for (int i=0; i<result.pageRecordCount; i++)
 	<% } %>
 
 
-	<td align="right" title="<%=AlgoUtil.numericFormat(orderAge / 1000.0, 3) %> Microseconds">
+	<td align="right" title="<%=AlgoUtil.numericFormat(orderAgeNanos / 1000.0, 3) %> Microseconds">
 		<a href="<%=orderDetailLink %>" style="color: <%=theme.bodyText %>;" target="_blank">
-		<% if (orderAge < 1000000L) { %>
-			<%=orderAge == 0 ? "" : AlgoUtil.numericFormat(orderAge / 1000.0, 0) + "us" %>
+		<% if (orderAgeNanos < 1000000L) { %>
+			<%=orderAgeNanos == 0 ? "" : AlgoUtil.numericFormat(orderAgeNanos / 1000.0, 0) + "us" %>
 		<% } else { %>
-			<%=AlgoUtil.getOrderAge(orderAge / 1000000L) %>
+			<%=DateUtil.getOrderAge(orderAgeNanos / 1000000L) %>
 		<% } %>
 		</a>
 	</td>
@@ -382,7 +384,7 @@ for (int i=0; i<result.pageRecordCount; i++)
 		<% if (firstChildLatency < 1000000L) { %>
 			<%=firstChildLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildLatency / 1000.0, 0) + "us" %>
 		<% } else { %>
-			<%=AlgoUtil.getOrderAge(firstChildLatency / 1000000L) %>
+			<%=DateUtil.getOrderAge(firstChildLatency / 1000000L) %>
 		<% } %>
 		</a>
 	</td>
@@ -392,7 +394,7 @@ for (int i=0; i<result.pageRecordCount; i++)
 		<% if (firstChildAckLatency < 1000000L) { %>
 			<%=firstChildAckLatency == 0 ? "" : AlgoUtil.numericFormat(firstChildAckLatency / 1000.0, 0) + "us" %>
 		<% } else { %>
-			<%=AlgoUtil.getOrderAge(firstChildAckLatency / 1000000L) %>
+			<%=DateUtil.getOrderAge(firstChildAckLatency / 1000000L) %>
 		<% } %>
 		</a>
 	</td>
@@ -402,7 +404,7 @@ for (int i=0; i<result.pageRecordCount; i++)
 		<% if (firstTradeLatency < 1000000L) { %>
 			<%=firstTradeLatency == 0 ? "" : AlgoUtil.numericFormat(firstTradeLatency / 1000.0, 0) + "us" %>
 		<% } else { %>
-			<%=AlgoUtil.getOrderAge(firstTradeLatency / 1000000L) %>
+			<%=DateUtil.getOrderAge(firstTradeLatency / 1000000L) %>
 		<% } %>
 		</a>
 	</td>

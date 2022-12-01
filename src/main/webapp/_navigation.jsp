@@ -53,6 +53,13 @@ boolean selectedTab = false;
         <a href="/orders.jsp" style="color: <%=theme.tab0Text %>;">Orders</a>       
     </td>
 
+    <% selectedTab = spath.equals("/childs.jsp"); %>
+    <td width=2></td>       
+    <td class="tab_round<%=selectedTab ? "s" : "" %>" width=150 align="center" bgcolor="<%=selectedTab ? theme.tab0s : theme.tab0 %>"
+    	title="View Child Orders">
+        <a href="/childs.jsp" style="color: <%=theme.tab0Text %>;">Child Orders</a>       
+    </td>
+    
     <% selectedTab = spath.contains("/instruments.jsp"); %>
     <td width=5></td>   
     <td class="tab_round<%=selectedTab ? "s" : "" %>" width=150 align="center" bgcolor="<%=selectedTab ? theme.tab0s : theme.tab0 %>"

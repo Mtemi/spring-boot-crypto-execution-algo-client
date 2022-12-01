@@ -1,3 +1,5 @@
+<%@page import="com.ismail.algo.DateUtil"%>
+<%@page import="org.apache.http.client.utils.DateUtils"%>
 <%@page import="java.time.ZoneId"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="com.ismail.algo.model.TradesResult"%>
@@ -150,7 +152,7 @@ for (int i=0; result != null && i<result.pageRecordCount; i++)
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
 
-	<td ><%=AlgoUtil.formatNano(trade.getTradeTime(), formatter) %></td>
+	<td ><%=DateUtil.formatNano(trade.getTradeTime(), formatter) %></td>
 	
 	<td align="center"><%=trade.getTradeID() %></td>
 

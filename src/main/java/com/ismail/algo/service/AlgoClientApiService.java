@@ -681,6 +681,73 @@ public class AlgoClientApiService
             throw new BusinessApiException(e);
         }
     }
+    
+    public ChildOrdersResult getChildOrders(int pageNum, int pageSize)
+    {
+
+        try
+        {
+            String url = config.getUrlPrefix();
+            url += config.getChildOrdersUrl();
+
+            url += "?pageNum=" + pageNum;
+
+            url += "&pageSize=" + pageSize;
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header("accept", "application/json") //
+                    .uri(URI.create(url)) //
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == HttpStatus.SC_OK)
+            {
+                String body = response.body();
+
+                ObjectMapper mapper = new ObjectMapper();
+
+                if (body.contains("errorCode"))
+                {
+                    AlgoApiError err = mapper.readValue(body, AlgoApiError.class);
+
+                    throw new BusinessApiException(err);
+                }
+                else
+                {
+                    ChildOrdersResult result = mapper.readValue(body, ChildOrdersResult.class);
+
+                    return result;
+                }
+            }
+            else
+            {
+                throw new BusinessApiException(response.statusCode(), "Unexpected Response");
+            }
+        }
+        catch (InterruptedException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(e);
+        }
+        catch (ConnectException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(AlgoConstants.ERROR_MSG_SERVER_UNREACHABLE);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage(), e);
+
+            throw new BusinessApiException(e);
+        }
+
+    }
 
     public ChildOrdersResult getChildOrdersByParentOrderID(long orderID, int pageNum, int pageSize)
     {

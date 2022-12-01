@@ -1,3 +1,4 @@
+<%@page import="com.ismail.algo.DateUtil"%>
 <%@page import="com.ismail.algo.model.TopOfBook"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.ismail.algo.controller.PageInfo"%>
@@ -53,7 +54,7 @@ double displayQtyDefault = 0.0;
 // Create an order request; with some pre-populated values
 NewOrderRequest orderReq = null;
 
-SimpleDateFormat timeFormatter = AlgoUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
+SimpleDateFormat timeFormatter = DateUtil.getFormatter("yyyyMMdd HH:mm:ss", "GMT");
 
 String spath = request.getServletPath();
 
@@ -673,7 +674,7 @@ catch (Throwable e)
 
 
         	<% } else if ("time".equalsIgnoreCase(paramDef.getType()) && "Long".equalsIgnoreCase(paramDef.getTypeFormat()) == false) { 
-        		SimpleDateFormat algoParamFormatter = AlgoUtil.getFormatter("HH:mm:ss", inst.getTimezone());
+        		SimpleDateFormat algoParamFormatter = DateUtil.getFormatter("HH:mm:ss", inst.getTimezone());
         	%>
         	
 	            <input type="text" id="algo_<%=paramDef.getName() %>" name="algo_<%=paramDef.getName() %>" 
