@@ -20,7 +20,7 @@ AlgoClientConfig algoConfig = appServices.config;
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
-pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Top Of Books";
+pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - Instruments";
 
 List<Instrument> instruments = null;
 
@@ -76,22 +76,22 @@ for (int i=0; i<instruments.size(); i++)
 { 
     Instrument inst = instruments.get(i);
     
-    String color = inst.getTopOfBook().isLive() ? theme.bodyText : theme.bodyTextLight2;
+    String color = inst.topOfBook != null && inst.topOfBook.live ? theme.bodyText : theme.bodyTextLight2;
     
     // replace the dots; as it causes issues with JS
     String elemID = inst.getInstrumentID().replaceAll("\\.", "_");
 %>
 
 <tr bgcolor="<%=(i % 2 == 1) ? theme.rawHighlight : theme.raw %>">
-	<td id="symbol_<%=elemID %>" style="color: <%=color %>;" valign="top"><b><%=inst.getInstrumentID() %></b></td>
+	<td id="symbol_<%=elemID %>" style="color: <%=color %>;" valign="top"><b><%=inst.instrumentID %></b></td>
 	<td valign="top" style="color: <%=color %>;" ><b><%=inst.getDesc() %></b></td>
 	<td valign="top" style="color: <%=color %>;" ><%=inst.getInstType() %></td>
 
-	<td id="mdSource_<%=elemID %>" style="color: <%=color %>;" valign="top"><%=inst.topOfBook.getMdSource() %></td>
+	<td id="mdSource_<%=elemID %>" style="color: <%=color %>;" valign="top"><%=inst.topOfBook.mdSource %></td>
 
 	<td id="bidQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
-	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.bid : color %>;"></td>
-	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.getTopOfBook().isLive() ? theme.ask : color %>;"></td>
+	<td id="bidPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.topOfBook.live ? theme.bid : color %>;"></td>
+	<td id="askPx_<%=elemID %>" valign="top" align="right" style="color: <%=inst.topOfBook.live ? theme.ask : color %>;"></td>
 	<td id="askQty_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
 
 	<td id="spread_<%=elemID %>" valign="top" align="right" style="color: <%=color %>;" ></td>
@@ -178,7 +178,7 @@ socket.onmessage = function(event)
     //console.log(event.data);
     
     // replace the dot; as it causes issues with JS
-    var elemID = message.instrumentID.replace('.', '_');    
+    var elemID = message.i.replace('.', '_');    
     
     var idBidQty = document.querySelector('#bidQty_'+elemID);
     var idBidPx = document.querySelector('#bidPx_'+elemID);
@@ -189,17 +189,17 @@ socket.onmessage = function(event)
     var idSpread = document.querySelector('#spread_'+elemID);
     var idSpreadBps = document.querySelector('#spreadBps_'+elemID);
 			
-	idBidQty.textContent = message.bidQtyStr;
-	idBidPx.textContent = message.bidStr;
-	idAskQty.textContent = message.askQtyStr;
-	idAskPx.textContent = message.askStr;
+	idBidQty.textContent = message.bqs;
+	idBidPx.textContent = message.bs;
+	idAskQty.textContent = message.aqs;
+	idAskPx.textContent = message.as;
 	
-	idSpread.textContent = message.spreadStr;
-	idSpreadBps.textContent = message.spreadBpsStr;
+	idSpread.textContent = message.sprs;
+	idSpreadBps.textContent = message.sprbs;
 
-	idLive.textContent = message.live ? "Y" : "N";
+	idLive.textContent = message.lv ? "Y" : "N";
 	
-	idUtime.textContent = message.updateTimeDesc;
+	idUtime.textContent = message.us;
 };
 
 </script>

@@ -17,26 +17,17 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class ResponseMsg implements Serializable
+public class ResponseMsg  extends ApiMsg implements Serializable
 {  
     public static final long serialVersionUID = 1;
-
-    /**
-     * see {@link ApiMsgType}
-     */
-    @JsonProperty(FIXTags.TAGMsgType)
-    public int msgType;
-    
-    @JsonProperty(FIXTags.TAGSendingTime)
-    public long time;
-    
-    @JsonProperty("s")
+   
+    @JsonProperty("sc")
     public boolean success;
 
-    @JsonProperty("e")
+    @JsonProperty("er")
     public String errorMessage;
     
-    @JsonProperty("err")
+    @JsonProperty("erd")
     public String errorDetail;
     
     public ResponseMsg()
@@ -46,19 +37,19 @@ public class ResponseMsg implements Serializable
     
     public ResponseMsg(int messageType)
     {
-        this.msgType = messageType;
+        super(messageType);
     }
     
     public ResponseMsg(int messageType, boolean success)
     {
-        this.msgType = messageType;
+        super(messageType);
         this.success = success;
     }
     
     
     public ResponseMsg(int messageType, String errorMessage)
     {
-        this.msgType = messageType;
+        super(messageType);
         this.success = false;
         this.errorMessage = errorMessage;
     }

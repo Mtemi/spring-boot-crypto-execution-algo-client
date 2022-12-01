@@ -29,6 +29,6 @@ public class TradesResult extends ResponseMsg
         
     public TradesResult()
     {
-        super(ApiMsgType.TradeResult);
+        super(ApiMsgType.TradesResult);
     }
 }

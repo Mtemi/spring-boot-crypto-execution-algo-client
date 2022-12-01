@@ -29,6 +29,6 @@ public class ChildOrdersResult extends ResponseMsg
         
     public ChildOrdersResult()
     {
-        super(ApiMsgType.ChildOrderResult);
+        super(ApiMsgType.ChildOrdersResult);
     }
 }

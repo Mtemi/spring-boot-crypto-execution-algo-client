@@ -289,7 +289,7 @@ socket.onmessage = function(event)
     var message = JSON.parse(event.data);
 
     // replace the dot; as it causes issues with JS
-    var elemID = message.instrumentID.replace('.', '_') + '_' + message.mdSource.replace('.', '_');
+    var elemID = message.i.replace('.', '_') + '_' + message.mds.replace('.', '_');
     
     var idBidQty = document.querySelector('#bidQty_'+elemID);
     var idBidPx = document.querySelector('#bidPx_'+elemID);
@@ -302,19 +302,19 @@ socket.onmessage = function(event)
 
     var idTicks = document.querySelector('#ticks_'+elemID);
 
-	idBidQty.textContent = message.bidQtyStr;
-	idBidPx.textContent = message.bidStr;
-	idAskQty.textContent = message.askQtyStr;
-	idAskPx.textContent = message.askStr;
+	idBidQty.textContent = message.bqs;
+	idBidPx.textContent = message.bs;
+	idAskQty.textContent = message.aqs;
+	idAskPx.textContent = message.as;
 	
-	idSpread.textContent = message.spreadStr;
-	idSpreadBps.textContent = message.spreadBpsStr;
+	idSpread.textContent = message.sprs;
+	idSpreadBps.textContent = message.sprbs;
 
-	idTicks.textContent = message.updateNumber;
+	idTicks.textContent = message.un;
 
-	idLive.textContent = message.live ? "Y" : "N";
+	idLive.textContent = message.lv ? "Y" : "N";
 
-	idUtime.textContent = message.updateTimeDesc;
+	idUtime.textContent = message.us;
     
 };
 

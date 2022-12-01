@@ -3,6 +3,7 @@ package com.ismail.algo.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.ToString;
@@ -12,31 +13,44 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderBook extends ResponseMsg
 {    
-    private String instrumentID = null;
+    @JsonProperty("i")
+    public String instrumentID = null;
         
-    private String symbol = null;
+    @JsonProperty("s")
+    public String symbol = null;
 
-    private double bidQty = 0.0;
+    @JsonProperty("bq")
+    public double bidQty = 0.0;
 
-    private double bid = 0.0;
+    @JsonProperty("b")
+    public double bid = 0.0;
 
-    private double ask = 0.0;
+    @JsonProperty("a")
+    public double ask = 0.0;
 
-    private double askQty = 0.0;
+    @JsonProperty("aq")
+    public double askQty = 0.0;
 
-    private double last = 0.0;
+    @JsonProperty("l")
+    public double last = 0.0;
 
-    private long updateTime = 0L;
+    @JsonProperty("u")
+    public long updateTime = 0L;
 
-    private int updateNumber = 0;
+    @JsonProperty("un")
+    public int updateNumber = 0;
 
-    private int depthLevels = 0;
+    @JsonProperty("dl")
+    public int depthLevels = 0;
 
-    private boolean live = false;
+    @JsonProperty("lv")
+    public boolean live = false;
     
-    private List<OrderBookEntry> bids = null;
+    @JsonProperty("bids")
+    public List<OrderBookEntry> bids = null;
 
-    private List<OrderBookEntry> asks = null;
+    @JsonProperty("asks")
+    public List<OrderBookEntry> asks = null;
 
     public OrderBook()
     {

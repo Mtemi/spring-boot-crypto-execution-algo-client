@@ -21,6 +21,7 @@ import com.ismail.algo.AlgoUtil;
 import com.ismail.algo.config.AlgoClientConfig;
 import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoApiError;
+import com.ismail.algo.model.AlgosResult;
 import com.ismail.algo.model.BusinessApiException;
 import com.ismail.algo.model.ChildOrder;
 import com.ismail.algo.model.ChildOrdersResult;
@@ -77,9 +78,9 @@ public class AlgoClientApiService
                 }
                 else
                 {
-                    Algo[] items = mapper.readValue(body, Algo[].class);
+                    AlgosResult result = mapper.readValue(body, AlgosResult.class);
 
-                    List<Algo> list = Arrays.asList(items);
+                    List<Algo> list = result.algos;
 
                     return list;
                 }

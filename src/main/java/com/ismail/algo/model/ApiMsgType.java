@@ -8,14 +8,14 @@ import com.ismail.algo.EnumIntGeneric;
  * @author ismail
  * @since 20221001
  */
-public class ApiMsgType  extends EnumIntGeneric
+public class ApiMsgType extends EnumIntGeneric
 {
-    private static int Counter = 0;
+    private static int Counter = -1;
 
     public static int None = Counter++;
 
     //
-    
+
     public static int Request = Counter++;
 
     public static int Response = Counter++;
@@ -38,7 +38,7 @@ public class ApiMsgType  extends EnumIntGeneric
 
     public static int OrderSingleRequest = Counter++;
 
-    public static int OrderSingleResponse =Counter++;
+    public static int OrderSingleResponse = Counter++;
 
     public static int OrderCancelRequest = Counter++;
 
@@ -50,45 +50,73 @@ public class ApiMsgType  extends EnumIntGeneric
 
     public static int OrderStatusResponse = Counter++;
 
-
+    // Orders / Trades
+    
     public static int Order = Counter++;
-    
+
+    public static int OrdersResult = Counter++;
+
     public static int ChildOrder = Counter++;
-    
+
+    public static int ChildOrdersResult = Counter++;
+
     public static int Trade = Counter++;
+
+    public static int TradesResult = Counter++;
+
+    // Algos
+    public static int AlgoDefinition = Counter++;
+
+    public static int AlgosResult = Counter++;
+
+    // positions
     
+    public static int Position = Counter++;
+
+    public static int PositionsResult = Counter++;
+
+    public static int PositionTrade = Counter++;
+
+    public static int PositionTradesResult = Counter++;
+
+
     // static data
+
+    public static int Exchange = Counter++;
+
+    public static int ExchangesResult = Counter++;
+
+    public static int Client = Counter++;
+
+    public static int ClientsResult = Counter++;
 
     public static int Instrument = Counter++;
 
-    public static int InstrumentResults = Counter++;
+    public static int InstrumentsResult = Counter++;
 
     // market data
     
     public static int TopOfBook = Counter++;
-    
-    public static int TopOfBookResults = Counter++;
-    
+
+    public static int TopOfBooksResult = Counter++;
+
+    public static int TopOfBookFormatted = Counter++;
+
     public static int OrderBook = Counter++;
-    
-    public static int OrderBookResults = Counter++;
-    
-    // order grid results
-    
-    public static int OrderResult = Counter++;
-    
-    public static int ChildOrderResult = Counter++;
-    
-    public static int TradeResult = Counter++;
-    
-     
-    // Algos
-    public static int AlgoDefinition = Counter++;
-    
-    // others
-    
+
+    public static int OrderBooksResult = Counter++;
+
+    // 
+
     public static int ContactUsRequest = Counter++;
-    
+
+    public static int ServerTime = Counter++;
+
+    public static int System = Counter++;
+
+    public static int SystemsResult = Counter++;
+
+
     // --------------------------------------------------------
     // copy/paste this block to all generic enum integers
     // --------------------------------------------------------

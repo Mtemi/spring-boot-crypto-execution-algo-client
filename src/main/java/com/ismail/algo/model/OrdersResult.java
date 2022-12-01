@@ -29,6 +29,6 @@ public class OrdersResult extends ResponseMsg
      
     public OrdersResult()
     {
-        super(ApiMsgType.OrderResult);
+        super(ApiMsgType.OrdersResult);
     }
 }

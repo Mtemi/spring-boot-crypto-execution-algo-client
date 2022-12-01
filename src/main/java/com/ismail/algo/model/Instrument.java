@@ -3,6 +3,7 @@ package com.ismail.algo.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.ToString;
@@ -54,8 +55,10 @@ public class Instrument extends ResponseMsg
 
     public boolean live;
     
+    @JsonProperty("tob")
     public TopOfBook topOfBook;
     
+    @JsonProperty("tobs")
     public List<TopOfBook> topOfBooks;
     
     public Instrument()

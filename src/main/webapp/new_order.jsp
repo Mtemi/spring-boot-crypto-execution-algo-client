@@ -33,7 +33,7 @@ AlgoClientConfig algoConfig = appServices.config;
 //set this page title
 PageInfo pageInfo = AlgoUtil.getPageInfo(request);
 pageInfo.appTitle = algoConfig.getWebMainTitle();
-pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - New Order Request";
+pageInfo.pageTitle = algoConfig.getWebMainTitle() + " - New Order";
 
 
 String strategyID = AlgoUtil.getParameter(request, "strategyID", "SOR");
@@ -264,7 +264,7 @@ catch (Throwable e)
 	<table width="100%" cellpadding=5 align="center">
 	
 	<tr>
-		<td colspan="10" align="right">
+		<td colspan="11" align="right">
 
 			<input type="button" name="btnRefresh" 
 				value="Refresh" style="width: 100px;"
@@ -277,6 +277,7 @@ catch (Throwable e)
 	
 	<tr bgcolor="<%=theme.rawHighlight %>">
 		<td colspan=1 rowspan=2 width="200"><b>InstrumentID</b></td>
+		<td colspan=1 rowspan=2 width="100"><b>Source</b></td>
 		<td colspan=1 rowspan=2 width="100" align="right"><b>Last Px</b></td>
 		<td colspan=1 rowspan=2 width="100" align="right"><b>Bid Qty</b></td>
 		<td colspan=1 rowspan=2 width="100" align="right"><b>Bid Px</b></td>
@@ -306,9 +307,14 @@ catch (Throwable e)
 			<% } %>
 			</select>
 		</td>
+
+		<td id="mdSource" valign="top" align="left">
+			<%=inst.topOfBook.mdSource %>
+		</td>
 		
+				
 		<td id="lastPx" valign="top" align="right">
-			<%=AlgoUtil.numericFormat(inst.getTopOfBook().getLast(), inst.getPriceDecimals()) %>
+			<%=AlgoUtil.numericFormat(inst.topOfBook.last, inst.getPriceDecimals()) %>
 		</td>
 		
 		<td id="bidQty" valign="top" align="right">
@@ -811,6 +817,7 @@ var instrumentSelectBox = document.getElementById('instrumentID');
 
 //console.log(instrumentSelectBox);
 
+var idMdSource = document.querySelector('#mdSource');
 var idLastPx = document.querySelector('#lastPx');
 var idBidQty = document.querySelector('#bidQty');
 var idBidPx = document.querySelector('#bidPx');
@@ -865,27 +872,28 @@ socket.onmessage = function(event)
 			
     //instrumentSelectBox.value = message.instrumentID;
     
-	idLastPx.textContent = message.lastStr;
-	idBidQty.textContent = message.bidQtyStr;
-	idBidPx.textContent = message.bidStr;
-	idAskQty.textContent = message.askQtyStr;
-	idAskPx.textContent = message.askStr;
+    idMdSource.textContent = message.mds;
+	idLastPx.textContent = message.ls;
+	idBidQty.textContent = message.bqs;
+	idBidPx.textContent = message.bs;
+	idAskQty.textContent = message.aqs;
+	idAskPx.textContent = message.as;
 	
-	frm.lastPx.value = message.lastStr;
-	frm.bidQty.value = message.bidQtyStr;
-	frm.bidPx.value = message.bidStr;
-	frm.askQty.value = message.askQtyStr;
-	frm.askPx.value = message.askStr;
-	frm.qtyDefault.value = (message.bidQty + message.askQty) / 2.0;
-	frm.displayQtyDefault.value = (message.bidQty + message.askQty) / 2.0;
+	frm.lastPx.value = message.ls;
+	frm.bidQty.value = message.bqs;
+	frm.bidPx.value = message.bs;
+	frm.askQty.value = message.aqs;
+	frm.askPx.value = message.as;
+	frm.qtyDefault.value = (message.bq + message.aq) / 2.0;
+	frm.displayQtyDefault.value = (message.bq + message.aq) / 2.0;
 	
 	
-	idSpread.textContent = message.spreadStr;
-	idSpreadBps.textContent = message.spreadBpsStr;
+	idSpread.textContent = message.sprs;
+	idSpreadBps.textContent = message.sprbs;
 
-	idLive.textContent = message.live ? "Y" : "N";
+	idLive.textContent = message.lv ? "Y" : "N";
 	
-	idUtime.textContent = message.updateTimeDesc;
+	idUtime.textContent = message.us;
 	
 	
 	

@@ -18,6 +18,6 @@ public class OrderBooksResult extends ResponseMsg
 
     public OrderBooksResult()
     {
-        super(ApiMsgType.OrderBookResults);
+        super(ApiMsgType.OrderBooksResult);
     }
 }
