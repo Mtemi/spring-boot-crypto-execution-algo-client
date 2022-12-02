@@ -353,7 +353,7 @@ catch (Throwable e)
 
 	<!--  status fields -->
 	<tr height="25">
-	    <td id="msgStatus" colspan=10 align="right">&nbsp;</td>
+	    <td id="msgStatus" colspan=11 align="right">&nbsp;</td>
 	</tr>
 	
 	</table>
@@ -798,7 +798,7 @@ function toggleShowAlgo(divID)
 String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
 wsURL += "?instID=" + instrumentID;
 wsURL += "&interval=100";
-wsURL += "&formatted=true";
+wsURL += "&formatted=t";
 
 //if (StringUtil.isDefined(instID))
 //	wsURL += "?instID=" + instID;

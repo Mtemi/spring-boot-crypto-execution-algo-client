@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ismail.algo.AlgoConstants;
 import com.ismail.algo.AlgoUtil;
+import com.ismail.algo.HttpContentTypes;
+import com.ismail.algo.HttpHeaders;
 import com.ismail.algo.config.AlgoClientConfig;
 import com.ismail.algo.model.Algo;
 import com.ismail.algo.model.AlgoApiError;
@@ -60,7 +62,11 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -122,7 +128,11 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -194,8 +204,12 @@ public class AlgoClientApiService
             
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -262,8 +276,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -322,8 +340,12 @@ public class AlgoClientApiService
             
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -386,8 +408,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -446,8 +472,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -510,8 +540,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -573,8 +607,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -634,8 +672,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -699,7 +741,7 @@ public class AlgoClientApiService
 
             HttpRequest request = HttpRequest.newBuilder() //
                     .GET() //
-                    .header("accept", "application/json") //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
                     .uri(URI.create(url)) //
                     .build();
 
@@ -766,8 +808,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -828,8 +874,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -892,8 +942,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -953,8 +1007,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -1016,8 +1074,12 @@ public class AlgoClientApiService
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder().GET().header("accept", "application/json").uri(URI.create(url)).build();
-
+            HttpRequest request = HttpRequest.newBuilder() //
+                    .GET() //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
+                    .uri(URI.create(url)) //
+                    .build();
+            
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.SC_OK)
@@ -1083,8 +1145,8 @@ public class AlgoClientApiService
 
             HttpRequest request = HttpRequest.newBuilder() //
                     .uri(URI.create(url)) //
-                    .header("content-type", "application/json") //
-                    .header("accept", "application/json") //
+                    .header(HttpHeaders.CONTENT_TYPE,  HttpContentTypes.APPLICATION_JSON) //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
                     //.header(BinanceApiConstants.API_KEY_HEADER, apiKey)
                     .POST(BodyPublishers.ofString(json)) //
                     .build();
@@ -1161,8 +1223,8 @@ public class AlgoClientApiService
 
             HttpRequest request = HttpRequest.newBuilder() //
                     .uri(URI.create(url)) //
-                    .header("content-type", "application/json") //
-                    .header("accept", "application/json") //
+                    .header(HttpHeaders.CONTENT_TYPE,  HttpContentTypes.APPLICATION_JSON) //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
                     //.header(BinanceApiConstants.API_KEY_HEADER, apiKey)
                     .DELETE() //
                     .build();
@@ -1233,8 +1295,8 @@ public class AlgoClientApiService
 
             HttpRequest request = HttpRequest.newBuilder() //
                     .uri(URI.create(url)) //
-                    .header("content-type", "application/json") //
-                    .header("accept", "application/json") //
+                    .header(HttpHeaders.CONTENT_TYPE,  HttpContentTypes.APPLICATION_JSON) //
+                    .header(HttpHeaders.ACCEPT, HttpContentTypes.APPLICATION_JSON) //
                     //.header(BinanceApiConstants.API_KEY_HEADER, apiKey)
                     .POST(BodyPublishers.ofString(json)) //
                     .build();

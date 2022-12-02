@@ -243,8 +243,8 @@ if (AlgoUtil.isDefined(instID))
 {
 String wsURL = algoConfig.getUrlPrefixWebsockets() + algoConfig.getWsTopOfBookUrl();
 
-wsURL += "?multiSources=true";
-wsURL += "&formatted=true";
+wsURL += "?multiSource=t";
+wsURL += "&formatted=t";
 wsURL += "&instID=" + instID;
 wsURL += "&interval=" + interval;
 
